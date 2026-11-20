@@ -12,5 +12,14 @@
   "exception": "http.client.IncompleteRead",
   "received_partial_bytes": 9760073,
   "action": "Discard the incomplete transfer. Retry complete transport responses and revalidate the original ZIP and schema. Reuse the 19 completed monthly receipts.",
-  "workflow_url": "https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/actions/runs/44668906175"
+  "workflow_url": "https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/actions/runs/44668906175",
+  "independent_followup": {
+    "retrieved_utc": "2026-11-20T05:48:00.772105+00:00",
+    "source_sha256": "8ee638ddcdcc123f828eabab7b1399fda32188d71acd96c034d1fe271dc7704d",
+    "verified_source_bytes": 13847299,
+    "canonical_sha256": "720aca02cedd178fb75f06189bff8338d0615312b5b28c75ed772b9418947eb6",
+    "observed_hours": 24,
+    "valid_price_node_hours": 406008,
+    "status": "RECOVERED_ORIGINAL_PUBLISHED_DATA"
+  }
 }
