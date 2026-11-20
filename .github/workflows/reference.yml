@@ -1,0 +1,27 @@
+name: Acquire dated zone and resource evidence
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/reference.yml']
+permissions: {contents: write}
+concurrency: {group: caiso-zone-references, cancel-in-progress: false}
+jobs:
+  references:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -r requirements.txt
+      - run: |
+          gh release view market-inputs-v1 >/dev/null
+          python -u src/zone_references.py --release market-inputs-v1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-reference-log-${{ github.run_id }}
+          path: manifests/events.jsonl
+          retention-days: 7

@@ -15,6 +15,9 @@ REFERENCE = {
     "ATL_PNODE_MAP": (1, {"pnode_id": "ALL"}, {"APNODE_ID", "PNODE_ID"}),
     "ATL_PNODE": (1, {"pnode_id": "ALL", "pnode_type": "ALL"}, {"PNODE_ID"}),
     "ATL_APNODE": (1, {"apnode_id": "ALL", "apnode_type": "ALL"}, {"APNODE_ID"}),
+    "ATL_AS_REGION_MAP": (1, {"as_region_id":"ALL"}, {"AS_REGION_ID","PNODE_ID"}),
+    "ATL_RESOURCE": (1, {"resource_id":"ALL","resource_type":"ALL","agge_type":"ALL"}, {"RESOURCE_ID","NODE_ID","RESOURCE_TYPE"}),
+    "ATL_LDF": (1, {"apnode_id":"ALL"}, {"APNODE_ID","PNODE_ID","DIST_FACTOR"}),
     "ATL_TAC_AREA_MAP": (1, {}, {"PNODE_ID"}),
     "ATL_HUB": (1, {}, {"APNODE_ID"}),
 }
