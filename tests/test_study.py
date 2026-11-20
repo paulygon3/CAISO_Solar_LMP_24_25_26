@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import pandas as pd
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"src"))
-from aggregate import summarize_period,weights
+from aggregate import summarize_period,weights,apply_price_conflicts
 from gaps import runs,regime
 from reference import solve
 from common import C
@@ -33,6 +33,14 @@ class StudyTests(unittest.TestCase):
         f=solve({"ATL_PNODE":p,"ATL_PNODE_MAP":h,"ATL_AS_REGION_MAP":a},pd.Index(["one","unknown"],name="node_id"))
         self.assertEqual(f.loc["one","zone_mapping_status"],"CONFLICTING")
         self.assertEqual(f.loc["unknown","metadata_match_status"],"UNMATCHED")
+    def test_conflicting_total_blocks_affected_result(self):
+        row=self.fixture().to_frame().T
+        ids=pd.Index(["N"]);row.index=ids;t=pd.date_range("2024-02-01",periods=4,freq="h",tz="UTC")
+        apply_price_conflicts(row,ids,t,{("N",t[2]):{"LMP"}})
+        self.assertEqual(row.iloc[0].coverage_status,"SOURCE_CONFLICT")
+        self.assertTrue(pd.isna(row.iloc[0].solar_weighted_lmp_usd_per_mwh))
+        self.assertEqual(row.iloc[0].NP15_component_basis_status,"SOURCE_CONFLICT")
+        self.assertEqual(row.iloc[0].total_price_conflict_hours,1)
     def test_gap_edges_and_regime(self):
         self.assertEqual(list(runs([True,True,False,True])),[(0,2),(3,4)])
         self.assertNotEqual(regime("2026-04-30"),regime("2026-05-01"))

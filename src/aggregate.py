@@ -106,6 +106,10 @@ def summarize_period(prices,codes,w,hub_values,components,applicable,times,hub_c
         component_reconciliation_tested_hours=testable.sum(0),component_reconciliation_exceptions=exceptions,
         component_reconciliation_max_abs_usd_per_mwh=np.where(testable.any(0),residual.max(0),np.nan),
         component_reconciliation_status=np.select([exceptions>0,~testable.any(0),testable.sum(0)<count],["RECONCILIATION_EXCEPTION","NOT_TESTED","PARTIAL_SUPPORT"],default="RECONCILED_ON_PUBLISHED_SUPPORT"))
+    for code in components:
+        key=code+"_weighted_usd_per_mwh"
+        out[key]=np.where(exceptions>0,np.nan,out[key])
+        out[code+"_status"]=np.where(exceptions>0,"RECONCILIATION_EXCEPTION",out[code+"_status"])
     for col,z in enumerate(ZONES):
         h=hub_values[:,col,None]
         pair=valid&np.isfinite(h)&resolved
@@ -163,10 +167,42 @@ def block_inputs(stage,months,batch,fields):
             for f in panels:panels[f].append(z[f] if f in z.files else np.full(z["LMP"].shape,np.nan))
     return {k:np.concatenate(v) for k,v in panels.items()}
 
+def apply_price_conflicts(stat,ids,times,conflicts):
+    """Keep valid-hour diagnostics but block headline estimates affected by ambiguous published totals."""
+    if not conflicts:
+        stat["total_price_conflict_hours"]=0
+        return
+    counts=pd.Series(0,index=ids,dtype=int)
+    hub_counts={z:0 for z in ZONES}
+    for (node,t),fields in conflicts.items():
+        if "LMP" not in fields or t not in times:continue
+        if node in counts.index:counts.loc[node]+=1
+        for zone,named in C["basis_hubs"].items():
+            if node==named:hub_counts[zone]+=1
+    node_block=counts.to_numpy()>0
+    stat["total_price_conflict_hours"]=counts.to_numpy()
+    if node_block.any():
+        for key in ["solar_weighted_lmp_usd_per_mwh","heatmap_lmp_usd_per_mwh","solar_capture_rate","negative_price_solar_share"]:
+            stat.loc[node_block,key]=np.nan
+        for key in [k for k in stat if k.endswith("_weighted_usd_per_mwh")]:stat.loc[node_block,key]=np.nan
+        stat.loc[node_block,["coverage_status","capture_status"]]="SOURCE_CONFLICT"
+        stat.loc[node_block,"heatmap_eligible"]=False
+        stat.loc[node_block,"heatmap_layer"]="NO_ESTIMATE"
+    for z in ZONES:
+        blocked=node_block|(hub_counts[z]>0)
+        if not blocked.any():continue
+        for key in [k for k in stat if k.startswith(z+"_") and (k.endswith("_usd_per_mwh") or k.endswith("_diff_usd_per_mwh"))]:
+            stat.loc[blocked,key]=np.nan
+        stat.loc[blocked,z+"_eligible"]=False
+        stat.loc[blocked,z+"_eligibility_reason"]="SOURCE_CONFLICT"
+        stat.loc[blocked,z+"_component_basis_status"]="SOURCE_CONFLICT"
+
 def calculate(inventory,index,stage,months,test=False):
     hist=pd.concat([pd.read_parquet(stage/m/"history.parquet") for m in months],ignore_index=True)
     from dataset import compress_history
     hist=compress_history(hist);hist.to_parquet(stage/"history.parquet",index=False,compression="zstd")
+    from gaps import source_quarantines
+    conflicts=source_quarantines(pd.unique(index.tz_convert(PACIFIC).date))
     multi=period_definitions(index,test);solar=profile(index[0].year,index)
     values=solar[[z+"_weight_hours" for z in ZONES]].to_numpy()
     required=[]
@@ -190,6 +226,14 @@ def calculate(inventory,index,stage,months,test=False):
     for j,z in enumerate(ZONES):hubframe[z+"_hub_lmp_usd_per_mwh"]=h[:,j]
     hubframe.to_parquet(stage/"hubs.parquet",index=False)
     sumdir=stage/"summary";sumdir.mkdir(exist_ok=True)
+    # These disjoint slices rebuild the matched period from monthly quantities and the truncated November window.
+    checks=["expected_hours","valid_price_hours","negative_price_hours","valid_price_sum_usd_per_mwh_hours","known_full_weight_hours","known_price_matched_weight_hours","known_weighted_numerator","component_reconciliation_exceptions"]
+    def additive(mask,p,c,w):
+        price=p[mask];weight=w[mask];resolved=c[mask]>=0;valid=np.isfinite(price)
+        safe_price=np.where(valid,price,0);safe_weight=np.where(valid&resolved,weight,0)
+        return dict(expected_hours=np.full(p.shape[1],mask.sum()),valid_price_hours=valid.sum(0),negative_price_hours=(price<0).sum(0),
+            valid_price_sum_usd_per_mwh_hours=safe_price.sum(0),known_full_weight_hours=np.nansum(weight,axis=0),
+            known_price_matched_weight_hours=safe_weight.sum(0),known_weighted_numerator=(safe_price*safe_weight).sum(0))
     for start in range(0,len(inventory),BATCH):
         bi=start//BATCH;ids=inventory.index[start:start+BATCH]
         panels=block_inputs(stage,months,bi,["LMP",*fields])
@@ -200,6 +244,7 @@ def calculate(inventory,index,stage,months,test=False):
             t=index[mask];stat=summarize_period(p[mask],c[mask],w[mask],h[mask],
                 {f:panels[f][mask] for f in fields},{f:app[f][mask] for f in fields},t,{f:hub_components[f][mask] for f in fields})
             stat.index=ids
+            apply_price_conflicts(stat,ids,t,conflicts)
             meta=period_metadata(history,t,ids)
             local=t.tz_convert(PACIFIC)
             meta.insert(0,"period",label);meta.insert(1,"period_start",str(local[0].date()));meta.insert(2,"period_end",str(local[-1].date()))
@@ -211,9 +256,19 @@ def calculate(inventory,index,stage,months,test=False):
             joined.reset_index().to_parquet(sumdir/f"{label}_{bi:03d}.parquet",index=False,compression="zstd")
             summaries[label]=stat
         main=summaries[next(iter(multi))]
-        for col in ["expected_hours","valid_price_hours","negative_price_hours","valid_price_sum_usd_per_mwh_hours","known_full_weight_hours","known_price_matched_weight_hours","known_weighted_numerator","component_reconciliation_exceptions"]:
+        for col in checks:
             total=sum(summaries[m][col] for m in months)
             if not np.allclose(total,main[col],rtol=1e-9,atol=1e-7):raise ValueError(f"monthly reconciliation {bi} {col}")
+        for label,mask in multi.items():
+            if not label.startswith("MATCHED"):continue
+            rebuilt={col:np.zeros(len(ids)) for col in checks[:-1]}
+            for month in months:
+                keep=multi[month]&mask
+                if not keep.any():continue
+                part=summaries[month] if np.array_equal(keep,multi[month]) else additive(keep,p,c,w)
+                for col in rebuilt:rebuilt[col]+=np.asarray(part[col])
+            for col,total in rebuilt.items():
+                if not np.allclose(total,summaries[label][col],rtol=1e-9,atol=1e-7):raise ValueError(f"matched reconciliation {bi} {label} {col}")
         for z in ZONES:
             for metric in ["common_price_hours","matched_hours","weight_hours","basis_numerator","node_numerator","hub_numerator"]:
                 col=z+"_"+metric
