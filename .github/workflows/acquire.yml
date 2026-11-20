@@ -12,6 +12,7 @@ concurrency:
   cancel-in-progress: false
 permissions:
   contents: write
+  actions: read
 jobs:
   acquire:
     runs-on: ubuntu-latest
@@ -40,6 +41,28 @@ jobs:
                       dst.parent.mkdir(exist_ok=True)
                       with z.open(n) as s,dst.open('wb') as f:shutil.copyfileobj(s,f)
           PY
+      - name: Reuse verified progress from an interrupted month when available
+        run: |
+          gh run list --workflow acquire.yml --status failure --limit 8 --json databaseId --jq '.[].databaseId' > "$RUNNER_TEMP/interrupted-runs"
+          while read -r id; do
+            tag="unfinished-oasis-inputs-$id"
+            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/artifacts" --jq '.artifacts[]|select(.expired==false)|.name' | grep -Fxq "$tag"; then
+              gh run download "$id" -n "$tag" -D "$RUNNER_TEMP/unfinished"
+              python - <<'PY'
+          import os,pathlib,shutil
+          src=pathlib.Path(os.environ["RUNNER_TEMP"])/"unfinished"
+          for folder in ("cache","canonical","manifests","quarantine"):
+              root=src/folder
+              if not root.is_dir():continue
+              for path in root.iterdir():
+                  if path.is_file() and path.suffix in {".parquet",".zip",".json"}:
+                      dest=pathlib.Path(folder)/path.name
+                      dest.parent.mkdir(exist_ok=True)
+                      shutil.copyfile(path,dest)
+          PY
+              break
+            fi
+          done
       - name: Acquire and publish monthly source and canonical archives
         run: |
           set -eu
@@ -47,6 +70,18 @@ jobs:
           args=()
           if [ -n "$MONTH" ]; then args+=(--month "$MONTH"); fi
           python -u src/acquire.py "${args[@]}" --release market-inputs-v1 --cleanup
+      - name: Save verified days from an interrupted month
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unfinished-oasis-inputs-${{ github.run_id }}
+          compression-level: 0
+          retention-days: 7
+          path: |
+            cache/
+            canonical/
+            manifests/*.json
+            quarantine/
       - name: Preserve retrieval diagnostics
         if: always()
         uses: actions/upload-artifact@v4

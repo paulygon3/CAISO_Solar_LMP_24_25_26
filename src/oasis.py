@@ -1,6 +1,7 @@
 """Public OASIS daily and reference requests. No AWS calls."""
 import argparse
 import csv
+from http.client import HTTPException
 import io
 import random
 import time as clock
@@ -71,7 +72,7 @@ def query(day, report, nodes=None, refresh=False, end=None):
         if m["params"] == args and m["endpoint"] == C["oasis"] and m["sha256"] == sha(path) and m["config_hash"] == CONFIG_HASH and validate(path,req) == m["schema"]:
             record({"stage":"retrieve","key":stem,"status":"CACHED"})
             return path
-    for attempt in range(1,4):
+    for attempt in range(1,6):
         clock.sleep(max(0,last+C["seconds_between_requests"]-clock.monotonic()))
         last=clock.monotonic()
         try:
@@ -84,9 +85,9 @@ def query(day, report, nodes=None, refresh=False, end=None):
             record({"stage":"retrieve","key":stem,"attempt":attempt,"status":"OK"})
             print("verified",stem,len(payload),flush=True)
             return path
-        except (OSError, ValueError, zipfile.BadZipFile, ET.ParseError) as e:
+        except (OSError, HTTPException, ValueError, zipfile.BadZipFile, ET.ParseError) as e:
             record({"stage":"retrieve","key":stem,"attempt":attempt,"params":args,"endpoint":C["oasis"],"error":str(e),"status":"FAILED"})
-            if attempt == 3:raise
+            if attempt == 5:raise
             pause=5*2**(attempt-1)+random.uniform(0.1,1)
             if isinstance(e, HTTPError) and (e.headers.get("Retry-After") or "").isdigit():
                 pause=max(pause,int(e.headers["Retry-After"]))

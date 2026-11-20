@@ -35,6 +35,13 @@ def diagnostics():
                 source_key=event.get("key"),attempt=event.get("attempt"),seen_success_in_same_log=event.get("key") in success,
                 error=event.get("error","UNKNOWN"),action="Retry and validate source archive; consult final daily receipt",source_log=str(path.relative_to(ROOT/"staging"))))
         results[str(path.relative_to(ROOT/"staging"))]={"stage_status_counts":{"/".join(k):v for k,v in attempts.items()},"failed_attempts_by_key":dict(errors)}
+    known=json.loads((ROOT/"results/interrupted_retrieval.json").read_text())
+    if any(str(known["source_workflow_run_id"]) in name for name in results):
+        results["source-workflow-exceptions"]={"stage_status_counts":{"retrieve/FAILED":1},"failed_attempts_by_key":{known["delivery_date"]:1}}
+        exceptions.append(dict(dataset=known["source_report"],requested_nodes="ALL",category=known["category"],utc_start=known["utc_start"],
+            utc_end_exclusive=known["utc_end_exclusive"],pacific_start=known["pacific_start"],pacific_end_exclusive=known["pacific_end_exclusive"],requested_span_hours=24,
+            month="2025-08",fraction_of_calendar_month=1/31,source_key=known["delivery_date"],attempt=1,seen_success_in_same_log=False,error=known["exception"],
+            action=known["action"],source_log=known["workflow_url"]))
     support_cols=["dataset","requested_nodes","category","utc_start","utc_end_exclusive","pacific_start","pacific_end_exclusive","requested_span_hours","month","fraction_of_calendar_month","source_key","attempt","seen_success_in_same_log","error","action","source_log"]
     pd.DataFrame(exceptions,columns=support_cols).to_csv(SUPPORT/"source_access_exceptions.csv",index=False)
     save_json(SUPPORT/"retrieval-summary.json",results)

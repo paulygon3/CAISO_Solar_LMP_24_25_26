@@ -1,0 +1,16 @@
+{
+  "source_workflow_run_id": 44668906175,
+  "source_report": "PRC_LMP v12 DAM",
+  "delivery_date": "2025-08-19",
+  "utc_start": "2025-08-19T07:00:00+00:00",
+  "utc_end_exclusive": "2025-08-20T07:00:00+00:00",
+  "pacific_start": "2025-08-19T00:00:00-07:00",
+  "pacific_end_exclusive": "2025-08-20T00:00:00-07:00",
+  "scope": "One all-location one-day request after the August 18 source ZIP had validated. No completed August package was committed in this run.",
+  "category": "RETRIEVAL_FAILURE",
+  "detected_utc": "2026-11-20T05:43:59+00:00",
+  "exception": "http.client.IncompleteRead",
+  "received_partial_bytes": 9760073,
+  "action": "Discard the incomplete transfer. Retry complete transport responses and revalidate the original ZIP and schema. Reuse the 19 completed monthly receipts.",
+  "workflow_url": "https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/actions/runs/44668906175"
+}
