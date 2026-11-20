@@ -1,5 +1,9 @@
 # CAISO zonal solar-weighted prices
 
+## Final study outcomes
+
+The public release contains the three verified annual workbooks. All 35 monthly packages were acquired, with prices visible in every one of the 25,272 expected hours. The historical union contains 20,048 exact source IDs and 389,180,920 nonmissing node-hour prices. The annual issue register flags a 46.47% change in the number of priced IDs on May 1, 2026. There were 2,685 component reconciliation exceptions across the three reporting windows at the project threshold. Published totals remain available. The report gives separate year-by-year counts for mapping uncertainty, pricing availability, classification, coverage and protected component results. [Final results and limitations](results/RUN_REPORT.md)
+
 ## Initial checkpoint
 
 The original checkpoint reached validated profiles and an all-location pilot. The references in this section point inside the downloadable checkpoint. See `manifests/run.json` for status, dates, source counts, and the measured storage estimates. Annual verification is reported separately in the publication receipts and final report. The three-hub calculation has its own evidence in `manifests/hubs.json` and `results/verified_hub_periods.csv` when completed. The supplied PDF uses one common Fresno profile and year-specific inventories. All quantities in this checkpoint come from fresh source retrieval or the requested calendar.

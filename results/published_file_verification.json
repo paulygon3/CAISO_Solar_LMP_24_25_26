@@ -1,0 +1,31 @@
+{
+  "provenance_sha256": "c225773eecf98d5a502a6d1f8ac752f70ddbeece40d6a9912c33ef90db2d27f7",
+  "public_downloads": [
+    {
+      "archive_crc": "PASS",
+      "bytes": 1382995555,
+      "filename": "CAISO_Solar_Weighted_LMP_2024.xlsx",
+      "release_reopened": "PASS",
+      "sha256": "1ac6f353881cada70cd09e213e3c8b57edc9344c3e34914b03a6a6d8f406e0cb",
+      "worksheets": 93
+    },
+    {
+      "archive_crc": "PASS",
+      "bytes": 1383676953,
+      "filename": "CAISO_Solar_Weighted_LMP_2025.xlsx",
+      "release_reopened": "PASS",
+      "sha256": "cfe102df8f62e55b2a0b50f65a8bd9d73854a3afe7dd13d11f4ebbc9a3596df0",
+      "worksheets": 93
+    },
+    {
+      "archive_crc": "PASS",
+      "bytes": 1074450465,
+      "filename": "CAISO_Solar_Weighted_LMP_2026.xlsx",
+      "release_reopened": "PASS",
+      "sha256": "1c05597c49f13f19ca558ec8a97176d0bbf6274ad6da1eaefb50e70dfe4afc78",
+      "worksheets": 93
+    }
+  ],
+  "release": "annual-workbooks-v1",
+  "verified_utc": "2026-11-20T08:39:27.029721+00:00"
+}

@@ -2,11 +2,23 @@
 
 This repository calculates day-ahead solar-weighted prices and node-to-hub basis for the union of CAISO OASIS pricing locations from January 1, 2024 through November 18, 2026. The calendar uses Pacific delivery dates. Each of NP15, ZP26 and SP15 has a fixed, two-location modeled solar profile.
 
-[Follow the production run](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/actions) · [Releases and downloads](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases) · [Monthly source archives](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/tag/market-inputs-v1)
+## Download the workbooks
+
+The completed release covers 25,272 Pacific delivery hours and 389,180,920 published prices. All three files passed written-workbook validation. Each download is a self-contained Excel file with 93 worksheets and the same 20,048 pricing locations.
+
+| Workbook | Coverage | Observed prices | Size |
+|---|---|---:|---:|
+| [2024 Excel workbook](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/download/annual-workbooks-v1/CAISO_Solar_Weighted_LMP_2024.xlsx) | January 1–December 31 | 145,007,605 | 1.38 GB |
+| [2025 Excel workbook](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/download/annual-workbooks-v1/CAISO_Solar_Weighted_LMP_2025.xlsx) | January 1–December 31 | 147,528,931 | 1.38 GB |
+| [2026 Excel workbook](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/download/annual-workbooks-v1/CAISO_Solar_Weighted_LMP_2026.xlsx) | January 1–November 18 | 96,644,384 | 1.07 GB |
+
+Start with **Node_Summary** for annual estimates or **Node_Dictionary** to locate a particular node’s hourly raw and weighted columns. Many historical locations lack a defensible zone for an entire reporting window. They remain in the workbook, with raw prices preserved and unsupported solar-weighted estimates blank. The matched-calendar balanced panel contains 5,332 nonreference locations.
+
+[Read the results and coverage report](results/RUN_REPORT.md) · [Download the provenance, gap registers and balanced-node results](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/download/annual-workbooks-v1/CAISO_provenance.zip) · [View the successful build](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/actions/runs/44697262026)
 
 ## Files and publication
 
-The **annual-workbooks-v1** release is created after all three production files pass readback. Each year is a self-contained Excel file with the full historical node inventory, hourly raw and weighted matrices, monthly and annual results, matched-calendar comparisons, all three hub comparisons, data issues, and method and validation tables. The 2026 file stops on November 18. The accompanying run report gives coverage, mapping, classifications, file sizes and checksums. The provenance ZIP contains per-year analysis tables, detailed gap records, the balanced-node comparison and retrieval diagnostics.
+Each annual workbook includes hourly raw and weighted matrices, monthly and annual results, matched-calendar comparisons, all three hub comparisons, data issues and validation tables. The final report includes scope, mapping, classifications, file sizes and checksums. Machine-readable outcomes are in [completion.json](results/completion.json). All three public downloads were reopened and their SHA-256 checksums verified in the [published-file receipt](results/published_file_verification.json). The [release](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/tag/annual-workbooks-v1) contains exactly three Excel files and the supporting report and evidence archive.
 
 The monthly-input release stores original CAISO archives and smaller checksummed analysis and reference packages. Each month publishes its completion manifest last. The original recovery checkpoint contains the six-day access pilot, raw model responses and independently obtained reference-hub data. [Download the checkpoint](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/download/checkpoint-v1/CAISO_resume.zip)
 

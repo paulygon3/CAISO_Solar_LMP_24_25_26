@@ -1,0 +1,599 @@
+{
+  "comparison": {
+    "balanced_counts_by_zone": {
+      "NP15": 2684,
+      "SP15": 2176,
+      "ZP26": 472
+    },
+    "balanced_nodes": 5332,
+    "highest_internal_missing_share_by_pacific_hour": [
+      {
+        "denominator": 6068296,
+        "hour": 1,
+        "numerator": 9683,
+        "share": 0.001595670349633571,
+        "year": 2024
+      },
+      {
+        "denominator": 6180362,
+        "hour": 1,
+        "numerator": 16379,
+        "share": 0.002650168388194737,
+        "year": 2025
+      },
+      {
+        "denominator": 4083146,
+        "hour": 2,
+        "numerator": 73144,
+        "share": 0.017913638160379275,
+        "year": 2026
+      }
+    ],
+    "population_metric": "Cross-node quantiles give each qualifying node one observation; hub reference rows are excluded.",
+    "rule": "Nonreference, stable single zone, accepted direct/inferred mapping, heatmap eligible and >=90% hour coverage in every January 1\u2013November 18 window."
+  },
+  "config_sha256": "625037fecf8a8b28cf50719a0182034b35312cd8caf82f6a087ed18cd5aa76a4",
+  "generated_utc": "2026-11-20T08:36:40.398751+00:00",
+  "price_recovery": {
+    "additional_published_prices": 0,
+    "named_requests": 169
+  },
+  "retrieval": {
+    "inventory/named-retrieval-events.jsonl": {
+      "failed_attempts_by_key": {
+        "PRC_LMP_2026-06-29_24bbc0fa68b8": 1
+      },
+      "stage_status_counts": {
+        "retrieve/FAILED": 1,
+        "retrieve/OK": 169
+      }
+    },
+    "source-workflow-exceptions": {
+      "failed_attempts_by_key": {
+        "2025-08-19": 1
+      },
+      "stage_status_counts": {
+        "retrieve/FAILED": 1
+      }
+    },
+    "support/retrieval/44668906175/acquisition-diagnostics-44668906175/manifests/events.jsonl": {
+      "failed_attempts_by_key": {
+        "ATL_PNODE_2024-05-29_7f3ba40b7927": 2,
+        "PRC_LMP_2024-05-05_88d6fc505627": 2,
+        "PRC_LMP_2024-06-13_5c646adcfbbb": 2,
+        "PRC_LMP_2024-06-29_19f07629caf8": 2,
+        "PRC_LMP_2024-07-10_08fb91359b73": 2,
+        "PRC_LMP_2024-12-16_92d8f0295440": 2,
+        "PRC_LMP_2024-12-31_c2062e38cf38": 2,
+        "PRC_LMP_2025-01-09_b7acc2db0553": 2,
+        "PRC_LMP_2025-01-22_9668192f57b8": 2,
+        "PRC_LMP_2025-02-01_89ad96dad25a": 1,
+        "PRC_LMP_2025-02-21_135b87bf8468": 1,
+        "PRC_LMP_2025-08-04_012c76996752": 2
+      },
+      "stage_status_counts": {
+        "canonical/CACHED": 5,
+        "retrieve/CACHED": 8,
+        "retrieve/FAILED": 22,
+        "retrieve/OK": 863
+      }
+    },
+    "support/retrieval/44669341518/historical-reference-log-44669341518/events.jsonl": {
+      "failed_attempts_by_key": {},
+      "stage_status_counts": {
+        "retrieve/OK": 201
+      }
+    },
+    "support/retrieval/44683210147/acquisition-diagnostics-44683210147/manifests/events.jsonl": {
+      "failed_attempts_by_key": {
+        "PRC_LMP_2025-08-23_04f8fbac91c1": 2,
+        "PRC_LMP_2025-09-03_4e7726df8626": 2,
+        "PRC_LMP_2026-02-13_fa2fe7321512": 2,
+        "PRC_LMP_2026-02-27_b230010e21b1": 1,
+        "PRC_LMP_2026-03-08_8ecfe19f8c66": 2,
+        "PRC_LMP_2026-03-23_39d03157066a": 2,
+        "PRC_LMP_2026-04-01_4c555a7947e8": 1,
+        "PRC_LMP_2026-04-19_31dcf71fe79b": 1
+      },
+      "stage_status_counts": {
+        "canonical/CACHED": 1,
+        "retrieve/CACHED": 3,
+        "retrieve/FAILED": 13,
+        "retrieve/OK": 712
+      }
+    }
+  },
+  "retrieval_stage_totals": {
+    "canonical/CACHED": 6,
+    "retrieve/CACHED": 11,
+    "retrieve/FAILED": 37,
+    "retrieve/OK": 1945
+  },
+  "status": "COMPLETE",
+  "unobserved_marketwide_intervals": 0,
+  "years": [
+    {
+      "analysis_specification_sha256": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+      "annual_coverage_status": {
+        "CONFLICTING_ZONE": 26,
+        "DISPLAY_ELIGIBLE": 6062,
+        "UNRESOLVED_ZONE": 13960
+      },
+      "archive_crc": "ALL_MEMBERS",
+      "bytes": 1382995555,
+      "classifications": {
+        "APNODE": 2393,
+        "PNODE": 15435,
+        "UNKNOWN": 1286,
+        "VARIES (see Node_Zone_History)": 934
+      },
+      "code_commit": "fc38be6cb611f7a4803f5c175cd8940eafe1ec49",
+      "config_sha256": "625037fecf8a8b28cf50719a0182034b35312cd8caf82f6a087ed18cd5aa76a4",
+      "dictionary_and_summary_keys_and_display_rules": "EXHAUSTIVE",
+      "external_links": 0,
+      "filename": "CAISO_Solar_Weighted_LMP_2024.xlsx",
+      "gap_audit": {
+        "classification_version": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+        "expected_node_hours": 176101632,
+        "mapping_gap_segments": 219588,
+        "marketwide_missing_hours": 0,
+        "missing_by_class": {
+          "INTERNAL_PRICE_GAP": 230738,
+          "POST_OBSERVATION": 941044,
+          "PRE_OBSERVATION": 29922245
+        },
+        "missing_node_hours": 31094027,
+        "observed_node_hours": 145007605,
+        "price_gap_segments": 51873,
+        "source_conflicts": 0,
+        "widespread_hours": 0
+      },
+      "github_run_attempt": "1",
+      "github_run_id": "44697262026",
+      "heatmap_layers": {
+        "HEATMAP": 6059,
+        "REFERENCE": 3,
+        "UNMAPPED": 13986
+      },
+      "hours": 8784,
+      "mapping_counts": {
+        "CONFLICTING": 26,
+        "DIRECT": 1760,
+        "INFERRED": 4302,
+        "UNRESOLVED": 13960
+      },
+      "matrix_headers_and_timestamps": "EXHAUSTIVE",
+      "missing_market_intervals": [],
+      "nodes": 20048,
+      "observed_first_day": "2024-01-01",
+      "observed_last_day": "2024-12-31",
+      "packages": {
+        "XlsxWriter": "3.2.9",
+        "numpy": "2.3.5",
+        "openpyxl": "3.1.5",
+        "pandas": "2.2.3",
+        "pyarrow": "26.0.1"
+      },
+      "period_first": "2024-01-01",
+      "period_last": "2024-12-31",
+      "profile_sha256": "771358534a02726abd24923403f6156698226835d88e576b2e6a5cce870e80fb",
+      "qa": {
+        "Acquisition retries": "See retrieval event logs",
+        "All-location source archive days": 366,
+        "Changed-support sensitivity": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+        "Component reconciliation exceptions": 1659,
+        "Deterministic February 29 hours": 24,
+        "Estimated solar repair hours": 0,
+        "Exact duplicate source rows": 0,
+        "Expected delivery hours": 8784,
+        "Final written-file readback": "PASS",
+        "Historical universe": 20048,
+        "Hub basis and normalized contribution checks": "PASS",
+        "Independent hub period metrics": 495,
+        "Independent retrieval checks": 26352,
+        "Marketwide missing hours": 0,
+        "Missing price node-hours": 31094027,
+        "Monthly additive reconciliation": "PASS",
+        "Nonmissing hourly numerators": 54735123,
+        "Observed priced nodes": 16972,
+        "Price report and version": "PRC_LMP v12 / DAM",
+        "Processing and source completion": "COMPLETE",
+        "Recovered official named prices": 0,
+        "Repaired share of solar weight": 0.0,
+        "Source schema and join cardinality": "PASS",
+        "Stage / Calculation reconciliation": "PASS",
+        "Stage / Canonical validity": "PASS",
+        "Stage / Download completeness": "VERIFIED_ARCHIVES",
+        "Stage / Estimated solar repair": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+        "Stage / Solar model validity": "PASS",
+        "Stage / Source access": "VERIFIED",
+        "Stage / Zone mapping": "PARTIAL",
+        "Unresolved conflicting source keys": 0,
+        "Valid hourly prices": 145007605,
+        "Widespread internal gap hours": 0,
+        "heatmap_layer / HEATMAP": 6059,
+        "heatmap_layer / REFERENCE": 3,
+        "heatmap_layer / UNMAPPED": 13986,
+        "market_classification / CAISO_AS_REGION": 5976,
+        "market_classification / UNKNOWN": 13694,
+        "market_classification / VARIES (see Node_Zone_History)": 378,
+        "node_classification / APNODE": 2393,
+        "node_classification / PNODE": 15435,
+        "node_classification / UNKNOWN": 1286,
+        "node_classification / VARIES (see Node_Zone_History)": 934,
+        "zone_mapping_status / CONFLICTING": 26,
+        "zone_mapping_status / DIRECT": 1760,
+        "zone_mapping_status / INFERRED": 4302,
+        "zone_mapping_status / UNRESOLVED": 13960
+      },
+      "qa_member": "xl/worksheets/sheet13.xml",
+      "sample_utc": [
+        "2024-01-01T08:00:00+00:00",
+        "2024-01-01T20:00:00+00:00",
+        "2024-02-29T08:00:00+00:00",
+        "2024-02-29T20:00:00+00:00",
+        "2024-03-10T08:00:00+00:00",
+        "2024-03-10T09:00:00+00:00",
+        "2024-03-10T10:00:00+00:00",
+        "2024-03-10T19:00:00+00:00",
+        "2024-07-02T08:00:00+00:00",
+        "2024-11-03T07:00:00+00:00",
+        "2024-11-03T08:00:00+00:00",
+        "2024-11-03T09:00:00+00:00",
+        "2024-11-03T20:00:00+00:00",
+        "2025-01-01T07:00:00+00:00"
+      ],
+      "sampled_raw_cells": 280672,
+      "sampled_weighted_cells": 280672,
+      "sealed_readback": "PASS",
+      "sha256": "1ac6f353881cada70cd09e213e3c8b57edc9344c3e34914b03a6a6d8f406e0cb",
+      "solar_audit": {
+        "assessment": "Original source coverage and composite reconstruction verified for every site, zone and delivery hour",
+        "changed_support_test": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+        "estimated_repair_hours": 0,
+        "leap_day_hours": 24,
+        "repair_share": 0.0,
+        "repair_validation": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+        "repair_weight_share": 0.0,
+        "sites": 6,
+        "source_hours_verified": 52560,
+        "specification_sha256": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752"
+      },
+      "source_days": 366,
+      "source_first_retrieved_utc": "2026-11-20T02:35:56.690742+00:00",
+      "source_last_retrieved_utc": "2026-11-20T04:53:42.759971+00:00",
+      "status": "PASSED",
+      "study_inventory_nodes": 20048,
+      "summary_rows_checked": {
+        "Matched_Period": 40096,
+        "Monthly_Summary": 240576,
+        "Node_Summary": 20048
+      },
+      "valid_numerators": 54735123,
+      "valid_prices": 145007605,
+      "validated_utc": "2026-11-20T08:29:27.891323+00:00",
+      "worksheets": 93,
+      "year": 2024
+    },
+    {
+      "analysis_specification_sha256": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+      "annual_coverage_status": {
+        "CONFLICTING_ZONE": 27,
+        "DISPLAY_ELIGIBLE": 6158,
+        "UNRESOLVED_ZONE": 13863
+      },
+      "archive_crc": "ALL_MEMBERS",
+      "bytes": 1383676953,
+      "classifications": {
+        "APNODE": 2391,
+        "PNODE": 15867,
+        "UNKNOWN": 845,
+        "VARIES (see Node_Zone_History)": 945
+      },
+      "code_commit": "fc38be6cb611f7a4803f5c175cd8940eafe1ec49",
+      "config_sha256": "625037fecf8a8b28cf50719a0182034b35312cd8caf82f6a087ed18cd5aa76a4",
+      "dictionary_and_summary_keys_and_display_rules": "EXHAUSTIVE",
+      "external_links": 0,
+      "filename": "CAISO_Solar_Weighted_LMP_2025.xlsx",
+      "gap_audit": {
+        "classification_version": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+        "expected_node_hours": 175620480,
+        "mapping_gap_segments": 197671,
+        "marketwide_missing_hours": 0,
+        "missing_by_class": {
+          "INTERNAL_PRICE_GAP": 391171,
+          "POST_OBSERVATION": 2904020,
+          "PRE_OBSERVATION": 24796358
+        },
+        "missing_node_hours": 28091549,
+        "observed_node_hours": 147528931,
+        "price_gap_segments": 43950,
+        "source_conflicts": 0,
+        "widespread_hours": 0
+      },
+      "github_run_attempt": "1",
+      "github_run_id": "44697262026",
+      "heatmap_layers": {
+        "HEATMAP": 6155,
+        "REFERENCE": 3,
+        "UNMAPPED": 13890
+      },
+      "hours": 8760,
+      "mapping_counts": {
+        "CONFLICTING": 27,
+        "DIRECT": 1858,
+        "INFERRED": 4300,
+        "UNRESOLVED": 13863
+      },
+      "matrix_headers_and_timestamps": "EXHAUSTIVE",
+      "missing_market_intervals": [],
+      "nodes": 20048,
+      "observed_first_day": "2025-01-01",
+      "observed_last_day": "2025-12-31",
+      "packages": {
+        "XlsxWriter": "3.2.9",
+        "numpy": "2.3.5",
+        "openpyxl": "3.1.5",
+        "pandas": "2.2.3",
+        "pyarrow": "26.0.1"
+      },
+      "period_first": "2025-01-01",
+      "period_last": "2025-12-31",
+      "profile_sha256": "90035396edbafe7d28072bafaaef1c67ba8edf60ec904a57374b441e82dc2bbb",
+      "qa": {
+        "Acquisition retries": "See retrieval event logs",
+        "All-location source archive days": 365,
+        "Changed-support sensitivity": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+        "Component reconciliation exceptions": 242,
+        "Deterministic February 29 hours": 0,
+        "Estimated solar repair hours": 0,
+        "Exact duplicate source rows": 0,
+        "Expected delivery hours": 8760,
+        "Final written-file readback": "PASS",
+        "Historical universe": 20048,
+        "Hub basis and normalized contribution checks": "PASS",
+        "Independent hub period metrics": 462,
+        "Independent retrieval checks": 26280,
+        "Marketwide missing hours": 0,
+        "Missing price node-hours": 28091549,
+        "Monthly additive reconciliation": "PASS",
+        "Nonmissing hourly numerators": 55430203,
+        "Observed priced nodes": 17359,
+        "Price report and version": "PRC_LMP v12 / DAM",
+        "Processing and source completion": "COMPLETE",
+        "Recovered official named prices": 0,
+        "Repaired share of solar weight": 0.0,
+        "Source schema and join cardinality": "PASS",
+        "Stage / Calculation reconciliation": "PASS",
+        "Stage / Canonical validity": "PASS",
+        "Stage / Download completeness": "VERIFIED_ARCHIVES",
+        "Stage / Estimated solar repair": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+        "Stage / Solar model validity": "PASS",
+        "Stage / Source access": "VERIFIED",
+        "Stage / Zone mapping": "PARTIAL",
+        "Unresolved conflicting source keys": 0,
+        "Valid hourly prices": 147528931,
+        "Widespread internal gap hours": 0,
+        "heatmap_layer / HEATMAP": 6155,
+        "heatmap_layer / REFERENCE": 3,
+        "heatmap_layer / UNMAPPED": 13890,
+        "market_classification / CAISO_AS_REGION": 6074,
+        "market_classification / UNKNOWN": 13598,
+        "market_classification / VARIES (see Node_Zone_History)": 376,
+        "node_classification / APNODE": 2391,
+        "node_classification / PNODE": 15867,
+        "node_classification / UNKNOWN": 845,
+        "node_classification / VARIES (see Node_Zone_History)": 945,
+        "zone_mapping_status / CONFLICTING": 27,
+        "zone_mapping_status / DIRECT": 1858,
+        "zone_mapping_status / INFERRED": 4300,
+        "zone_mapping_status / UNRESOLVED": 13863
+      },
+      "qa_member": "xl/worksheets/sheet13.xml",
+      "sample_utc": [
+        "2025-01-01T08:00:00+00:00",
+        "2025-01-01T20:00:00+00:00",
+        "2025-01-15T08:00:00+00:00",
+        "2025-01-15T20:00:00+00:00",
+        "2025-03-09T09:00:00+00:00",
+        "2025-03-09T10:00:00+00:00",
+        "2025-04-20T07:00:00+00:00",
+        "2025-04-20T19:00:00+00:00",
+        "2025-07-02T20:00:00+00:00",
+        "2025-11-02T08:00:00+00:00",
+        "2025-11-02T09:00:00+00:00",
+        "2026-01-01T07:00:00+00:00"
+      ],
+      "sampled_raw_cells": 240576,
+      "sampled_weighted_cells": 240576,
+      "sealed_readback": "PASS",
+      "sha256": "cfe102df8f62e55b2a0b50f65a8bd9d73854a3afe7dd13d11f4ebbc9a3596df0",
+      "solar_audit": {
+        "assessment": "Original source coverage and composite reconstruction verified for every site, zone and delivery hour",
+        "changed_support_test": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+        "estimated_repair_hours": 0,
+        "leap_day_hours": 0,
+        "repair_share": 0.0,
+        "repair_validation": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+        "repair_weight_share": 0.0,
+        "sites": 6,
+        "source_hours_verified": 52560,
+        "specification_sha256": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752"
+      },
+      "source_days": 365,
+      "source_first_retrieved_utc": "2026-11-20T02:35:47.529810+00:00",
+      "source_last_retrieved_utc": "2026-11-20T06:16:07.067051+00:00",
+      "status": "PASSED",
+      "study_inventory_nodes": 20048,
+      "summary_rows_checked": {
+        "Matched_Period": 20048,
+        "Monthly_Summary": 240576,
+        "Node_Summary": 20048
+      },
+      "valid_numerators": 55430203,
+      "valid_prices": 147528931,
+      "validated_utc": "2026-11-20T08:34:26.429517+00:00",
+      "worksheets": 93,
+      "year": 2025
+    },
+    {
+      "analysis_specification_sha256": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+      "annual_coverage_status": {
+        "CONFLICTING_ZONE": 27,
+        "DISPLAY_ELIGIBLE": 5675,
+        "UNRESOLVED_ZONE": 14346
+      },
+      "archive_crc": "ALL_MEMBERS",
+      "bytes": 1074450465,
+      "classifications": {
+        "APNODE": 1874,
+        "PNODE": 16240,
+        "UNKNOWN": 484,
+        "VARIES (see Node_Zone_History)": 1450
+      },
+      "code_commit": "fc38be6cb611f7a4803f5c175cd8940eafe1ec49",
+      "config_sha256": "625037fecf8a8b28cf50719a0182034b35312cd8caf82f6a087ed18cd5aa76a4",
+      "dictionary_and_summary_keys_and_display_rules": "EXHAUSTIVE",
+      "external_links": 0,
+      "filename": "CAISO_Solar_Weighted_LMP_2026.xlsx",
+      "gap_audit": {
+        "classification_version": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+        "expected_node_hours": 154930944,
+        "mapping_gap_segments": 164814,
+        "marketwide_missing_hours": 0,
+        "missing_by_class": {
+          "INTERNAL_PRICE_GAP": 1757045,
+          "POST_OBSERVATION": 49009214,
+          "PRE_OBSERVATION": 7520301
+        },
+        "missing_node_hours": 58286560,
+        "observed_node_hours": 96644384,
+        "price_gap_segments": 88716,
+        "source_conflicts": 0,
+        "widespread_hours": 0
+      },
+      "github_run_attempt": "1",
+      "github_run_id": "44697262026",
+      "heatmap_layers": {
+        "HEATMAP": 5672,
+        "REFERENCE": 3,
+        "UNMAPPED": 14373
+      },
+      "hours": 7728,
+      "mapping_counts": {
+        "CONFLICTING": 27,
+        "DIRECT": 1889,
+        "INFERRED": 3786,
+        "UNRESOLVED": 14346
+      },
+      "matrix_headers_and_timestamps": "EXHAUSTIVE",
+      "missing_market_intervals": [],
+      "nodes": 20048,
+      "observed_first_day": "2026-01-01",
+      "observed_last_day": "2026-11-18",
+      "packages": {
+        "XlsxWriter": "3.2.9",
+        "numpy": "2.3.5",
+        "openpyxl": "3.1.5",
+        "pandas": "2.2.3",
+        "pyarrow": "26.0.1"
+      },
+      "period_first": "2026-01-01",
+      "period_last": "2026-11-18",
+      "profile_sha256": "dfd81903f3b4b335cacdd462dc4fbefbffd1561a0c1d67f11f58fd010dd8c97d",
+      "qa": {
+        "Acquisition retries": "See retrieval event logs",
+        "All-location source archive days": 322,
+        "Changed-support sensitivity": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+        "Component reconciliation exceptions": 784,
+        "Deterministic February 29 hours": 0,
+        "Estimated solar repair hours": 0,
+        "Exact duplicate source rows": 0,
+        "Expected delivery hours": 7728,
+        "Final written-file readback": "PASS",
+        "Historical universe": 20048,
+        "Hub basis and normalized contribution checks": "PASS",
+        "Independent hub period metrics": 429,
+        "Independent retrieval checks": 23184,
+        "Marketwide missing hours": 0,
+        "Missing price node-hours": 58286560,
+        "Monthly additive reconciliation": "PASS",
+        "Nonmissing hourly numerators": 48835378,
+        "Observed priced nodes": 19578,
+        "Price report and version": "PRC_LMP v12 / DAM",
+        "Processing and source completion": "COMPLETE",
+        "Recovered official named prices": 0,
+        "Repaired share of solar weight": 0.0,
+        "Source schema and join cardinality": "PASS",
+        "Stage / Calculation reconciliation": "PASS",
+        "Stage / Canonical validity": "PASS",
+        "Stage / Download completeness": "VERIFIED_ARCHIVES",
+        "Stage / Estimated solar repair": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+        "Stage / Solar model validity": "PASS",
+        "Stage / Source access": "VERIFIED",
+        "Stage / Zone mapping": "PARTIAL",
+        "Unresolved conflicting source keys": 0,
+        "Valid hourly prices": 96644384,
+        "Widespread internal gap hours": 0,
+        "heatmap_layer / HEATMAP": 5672,
+        "heatmap_layer / REFERENCE": 3,
+        "heatmap_layer / UNMAPPED": 14373,
+        "market_classification / CAISO_AS_REGION": 5589,
+        "market_classification / UNKNOWN": 11331,
+        "market_classification / VARIES (see Node_Zone_History)": 3128,
+        "node_classification / APNODE": 1874,
+        "node_classification / PNODE": 16240,
+        "node_classification / UNKNOWN": 484,
+        "node_classification / VARIES (see Node_Zone_History)": 1450,
+        "zone_mapping_status / CONFLICTING": 27,
+        "zone_mapping_status / DIRECT": 1889,
+        "zone_mapping_status / INFERRED": 3786,
+        "zone_mapping_status / UNRESOLVED": 14346
+      },
+      "qa_member": "xl/worksheets/sheet13.xml",
+      "sample_utc": [
+        "2026-01-01T08:00:00+00:00",
+        "2026-01-01T20:00:00+00:00",
+        "2026-03-08T09:00:00+00:00",
+        "2026-03-08T10:00:00+00:00",
+        "2026-06-11T08:00:00+00:00",
+        "2026-11-01T08:00:00+00:00",
+        "2026-11-01T09:00:00+00:00",
+        "2026-11-18T08:00:00+00:00",
+        "2026-11-18T20:00:00+00:00",
+        "2026-11-19T07:00:00+00:00"
+      ],
+      "sampled_raw_cells": 200480,
+      "sampled_weighted_cells": 200480,
+      "sealed_readback": "PASS",
+      "sha256": "1c05597c49f13f19ca558ec8a97176d0bbf6274ad6da1eaefb50e70dfe4afc78",
+      "solar_audit": {
+        "assessment": "Original source coverage and composite reconstruction verified for every site, zone and delivery hour",
+        "changed_support_test": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+        "estimated_repair_hours": 0,
+        "leap_day_hours": 0,
+        "repair_share": 0.0,
+        "repair_validation": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+        "repair_weight_share": 0.0,
+        "sites": 6,
+        "source_hours_verified": 52560,
+        "specification_sha256": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752"
+      },
+      "source_days": 322,
+      "source_first_retrieved_utc": "2026-11-20T02:36:29.893619+00:00",
+      "source_last_retrieved_utc": "2026-11-20T07:14:23.684418+00:00",
+      "status": "PASSED",
+      "study_inventory_nodes": 20048,
+      "summary_rows_checked": {
+        "Matched_Period": 20048,
+        "Monthly_Summary": 220528,
+        "Node_Summary": 20048
+      },
+      "valid_numerators": 48835378,
+      "valid_prices": 96644384,
+      "validated_utc": "2026-11-20T08:30:54.059021+00:00",
+      "worksheets": 93,
+      "year": 2026
+    }
+  ]
+}
