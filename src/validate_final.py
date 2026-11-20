@@ -106,10 +106,10 @@ def check_summary(z,member,cols,periods,ids):
     for zone in ZONES:
         fields.extend(zone+"_"+s for s in ["eligible","solar_coverage_pct","basis_usd_per_mwh","display_basis_usd_per_mwh","matched_node_usd_per_mwh","matched_hub_usd_per_mwh"])
     attribution={}
-    for z in ZONES:
-        names=[k for k in cols if k.startswith(z+"_") and k.endswith("_basis_diff_usd_per_mwh")]
-        fields+=names+[z+"_component_basis_status",z+"_component_basis_residual_usd_per_mwh"]
-        attribution[z]=names
+    for zone in ZONES:
+        names=[k for k in cols if k.startswith(zone+"_") and k.endswith("_basis_diff_usd_per_mwh")]
+        fields+=names+[zone+"_component_basis_status",zone+"_component_basis_residual_usd_per_mwh"]
+        attribution[zone]=names
     groups=Counter();count=0
     for row in extract_rows(z,member,cols,fields):
         p,n=divmod(count,len(ids));count+=1
