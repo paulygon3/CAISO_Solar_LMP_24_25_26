@@ -35,6 +35,8 @@ def build_inventory():
     table=save_inventory(date_range(first,end),INVENTORY)
     from recovery import run,load_recovery
     added=run(table,first,end,INVENTORY)
+    events=ROOT/"manifests/events.jsonl"
+    if events.exists():shutil.copyfile(events,INVENTORY/"named-retrieval-events.jsonl")
     load_recovery.cache_clear()
     if added:table=save_inventory(date_range(first,end),INVENTORY)
     save_json(INVENTORY/"inventory.json",dict(nodes=len(table),start=str(first),end_exclusive=str(end),config_sha256=CONFIG_HASH,

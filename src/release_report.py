@@ -11,14 +11,17 @@ from common import C,CONFIG_HASH,ROOT,save_json,sha,utcnow
 SUPPORT=ROOT/"staging/support"
 def diagnostics():
     results={}
-    for path in sorted(SUPPORT.glob("retrieval/**/*.jsonl")):
+    paths=sorted(SUPPORT.glob("retrieval/**/*.jsonl"))
+    named=ROOT/"staging/inventory/named-retrieval-events.jsonl"
+    if named.exists():paths.append(named)
+    for path in paths:
         attempts=Counter();errors=Counter()
         with path.open() as f:
             for line in f:
                 if not line.strip():continue
                 r=json.loads(line);attempts[(r.get("stage",""),r.get("status",""))]+=1
                 if r.get("status")=="FAILED":errors[r.get("key","unspecified")]+=1
-        results[str(path.relative_to(SUPPORT))]={"stage_status_counts":{"/".join(k):v for k,v in attempts.items()},"failed_attempts_by_key":dict(errors)}
+        results[str(path.relative_to(ROOT/"staging"))]={"stage_status_counts":{"/".join(k):v for k,v in attempts.items()},"failed_attempts_by_key":dict(errors)}
     save_json(SUPPORT/"retrieval-summary.json",results)
     return results
 
@@ -32,11 +35,13 @@ def make_report():
     from comparisons import comparisons
     compare=comparisons(SUPPORT)
     diag=diagnostics()
+    stage_totals=Counter()
+    for run in diag.values():stage_totals.update(run["stage_status_counts"])
     gaps=sum(len(m["missing_market_intervals"]) for m in manifests)
     conflicts=sum(m["qa"]["Unresolved conflicting source keys"] for m in manifests)
     status="COMPLETE_WITH_DOCUMENTED_SOURCE_GAPS" if gaps or conflicts else "COMPLETE"
     recovery=json.loads((ROOT/"staging/inventory/price_recovery.json").read_text())
-    report={"price_recovery":{"named_requests":recovery["internal_missing_named_requests"],"additional_published_prices":recovery["recovered_published_prices"]},"status":status,"generated_utc":utcnow(),"config_sha256":CONFIG_HASH,"years":manifests,"comparison":compare,"retrieval":diag,"unobserved_marketwide_intervals":gaps}
+    report={"price_recovery":{"named_requests":recovery["internal_missing_named_requests"],"additional_published_prices":recovery["recovered_published_prices"]},"status":status,"generated_utc":utcnow(),"config_sha256":CONFIG_HASH,"years":manifests,"comparison":compare,"retrieval":diag,"retrieval_stage_totals":dict(stage_totals),"unobserved_marketwide_intervals":gaps}
     save_json(SUPPORT/"completion.json",report)
     lines=["# CAISO day-ahead solar-weighted prices","",f"**{status}**. Pacific delivery from January 1, 2024 through November 18, 2026. Each workbook retains the same {manifests[0]['nodes']:,} historical price identifiers, including the three named reference hubs.","",
         "| Year | First and last observed delivery date | Hours | Nonmissing node-hour prices | Sheets | File size (MiB) |","|---|---|---:|---:|---:|---:|"]
@@ -48,6 +53,7 @@ def make_report():
         "",f"Price retrievals span {min(m['source_first_retrieved_utc'] for m in manifests)} through {max(m['source_last_retrieved_utc'] for m in manifests)}. The retrieval summary records cache hits, successful attempts and transport errors from the archived acquisition logs.",
         "","Each archive passed CRC validation and reopened with openpyxl. The validator checked every matrix header, timestamp, nonmissing-cell total, dictionary address, summary key and display field. At the following sample sizes it compared individual raw prices and weighted numerators with dated canonical prices and mapping evidence.",""]
     for m in manifests:lines.append(f"- {m['year']} covered {m['sampled_raw_cells']:,} raw and {m['sampled_weighted_cells']:,} weighted positions at {len(m['sample_utc'])} UTC timestamps. SHA-256 `{m['sha256']}`.")
+    lines+=["",f"The archived request logs contain {stage_totals.get('retrieve/OK',0):,} successful downloads, {stage_totals.get('retrieve/CACHED',0):,} validated cache hits and {stage_totals.get('retrieve/FAILED',0):,} failed attempts. Per-run errors and request keys are in retrieval-summary.json."]
     lines+=["",f"An additional {recovery['internal_missing_named_requests']:,} named-node requests independently checked internal gaps in the all-location data. They recovered {recovery['recovered_published_prices']:,} additional published hourly prices. The original all-location rows and named-source archives are preserved separately."]
     lines+=["","## Balanced-node comparison and coverage","",f"{compare['balanced_nodes']:,} nonreference locations held the same assigned zone and met both 90% coverage thresholds in all three January 1–November 18 periods. The per-node estimates are in balanced_node_matched_period.parquet. Population_comparison.csv gives within-zone cross-node quantiles for full-year/YTD, matched-calendar and balanced populations.",""]
     for x in compare["highest_internal_missing_share_by_pacific_hour"]:
