@@ -87,10 +87,14 @@ def solve(active,ids):
         targeted={HUB_ZONE[h] for h in memberships if h in HUB_ZONE}
         other=memberships-set(HUB_ZONE)
         ars=set(area.get(node,"").split("|"))
+        crossed=("AS_CAISO" in ars and ({"AS_NP15","AS_SP15"}<=ars or {"AS_NP26","AS_SP26"}<=ars))
         aszone=AREA_SETS.get(frozenset(ars&AREA_NAMES)) if "AS_CAISO" in ars else None
         evidence="";method="None";status="UNRESOLVED";zone=""
         if node in HUB_ZONE:
             zone=HUB_ZONE[node];status="DIRECT";method="Named trading hub"
+        elif crossed:
+            status="CONFLICTING";method="Overlapping internal AS path regions"
+            evidence="|".join(sorted(ars&AREA_NAMES))
         elif len(targeted|({aszone} if aszone else set()))>1 or (other and (targeted or aszone)):
             status="CONFLICTING";method="Conflicting dated memberships"
             evidence="; ".join(sorted(memberships))+f" / AS path inference {aszone}"
@@ -101,8 +105,6 @@ def solve(active,ids):
             evidence="Scope determined by published hub membership"
         elif aszone:
             zone=aszone;status="INFERRED";method="Two internal AS path subregions"
-        elif "AS_CAISO" in ars and len(ars&AREA_NAMES)>2:
-            status="CONFLICTING";method="Overlapping AS subregions"
         market="CAISO_AS_REGION" if "AS_CAISO" in ars else ("OTHER_HUB_MEMBERSHIP" if other else "UNKNOWN")
         cls="PNODE_AND_APNODE" if node in ps and node in aps else "PNODE" if node in ps else "APNODE" if node in aps else "UNKNOWN"
         matched=cls!="UNKNOWN" or bool(memberships) or node in resource or node in tac or node in area

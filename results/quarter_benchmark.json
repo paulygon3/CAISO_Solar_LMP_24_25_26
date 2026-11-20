@@ -1,0 +1,239 @@
+{
+  "date_utc": "2026-11-20T04:17:54.803059+00:00",
+  "gaps": {
+    "classification_version": "a4b4478aaaaf04c476c863e009d1c8000187be12e9129b094b79372446a43752",
+    "expected_node_hours": 35868873,
+    "mapping_gap_segments": 41646,
+    "marketwide_missing_hours": 0,
+    "missing_by_class": {
+      "INTERNAL_PRICE_GAP": 7101,
+      "POST_OBSERVATION": 47377,
+      "PRE_OBSERVATION": 159440
+    },
+    "missing_node_hours": 213918,
+    "observed_node_hours": 35654955,
+    "price_gap_segments": 920,
+    "source_conflicts": 0,
+    "widespread_hours": 0
+  },
+  "readback": {
+    "annual_coverage_status": {
+      "CONFLICTING_ZONE": 24,
+      "DISPLAY_ELIGIBLE": 6133,
+      "UNRESOLVED_ZONE": 10274
+    },
+    "archive_crc": "ALL_MEMBERS",
+    "bytes": 355067168,
+    "classifications": {
+      "APNODE": 2347,
+      "PNODE": 13903,
+      "VARIES (see Node_Zone_History)": 181
+    },
+    "config_sha256": "625037fecf8a8b28cf50719a0182034b35312cd8caf82f6a087ed18cd5aa76a4",
+    "dictionary_and_summary_keys_and_display_rules": "EXHAUSTIVE",
+    "external_links": 0,
+    "heatmap_layers": {
+      "HEATMAP": 6130,
+      "REFERENCE": 3,
+      "UNMAPPED": 10298
+    },
+    "hours": 2183,
+    "mapping_counts": {
+      "CONFLICTING": 24,
+      "DIRECT": 1772,
+      "INFERRED": 4361,
+      "UNRESOLVED": 10274
+    },
+    "matrix_headers_and_timestamps": "EXHAUSTIVE",
+    "nodes": 16431,
+    "qa": {
+      "Acquisition retries": "See retrieval event logs",
+      "All-location source archive days": 91,
+      "Changed-support sensitivity": "NOT_APPLICABLE_NO_REPAIRED_TIMESTAMPS",
+      "Component reconciliation exceptions": 85,
+      "Deterministic February 29 hours": 24,
+      "Estimated solar repair hours": 0,
+      "Exact duplicate source rows": 0,
+      "Expected delivery hours": 2183,
+      "Final written-file readback": "PASS",
+      "Historical universe": 16431,
+      "Hub basis and normalized contribution checks": "PASS",
+      "Independent retrieval checks": 6549,
+      "Marketwide missing hours": 0,
+      "Missing price node-hours": 213918,
+      "Monthly additive reconciliation": "PASS",
+      "Nonmissing hourly numerators": 13478126,
+      "Observed priced nodes": 16431,
+      "Price report and version": "PRC_LMP v12 / DAM",
+      "Processing and source completion": "INTERNAL_INTEGRATION_TEST",
+      "Repaired share of solar weight": 0.0,
+      "Source schema and join cardinality": "PASS",
+      "Stage / Calculation reconciliation": "PASS",
+      "Stage / Canonical validity": "PASS",
+      "Stage / Download completeness": "VERIFIED_ARCHIVES",
+      "Stage / Estimated solar repair": "NOT_TRIGGERED_NO_UNEXPECTED_MODEL_GAPS",
+      "Stage / Solar model validity": "PASS",
+      "Stage / Source access": "VERIFIED",
+      "Stage / Zone mapping": "PARTIAL",
+      "Unresolved conflicting source keys": 0,
+      "Valid hourly prices": 35654955,
+      "Widespread internal gap hours": 0,
+      "heatmap_layer / HEATMAP": 6130,
+      "heatmap_layer / REFERENCE": 3,
+      "heatmap_layer / UNMAPPED": 10298,
+      "market_classification / CAISO_AS_REGION": 6047,
+      "market_classification / UNKNOWN": 10306,
+      "market_classification / VARIES (see Node_Zone_History)": 78,
+      "node_classification / APNODE": 2347,
+      "node_classification / PNODE": 13903,
+      "node_classification / VARIES (see Node_Zone_History)": 181,
+      "zone_mapping_status / CONFLICTING": 24,
+      "zone_mapping_status / DIRECT": 1772,
+      "zone_mapping_status / INFERRED": 4361,
+      "zone_mapping_status / UNRESOLVED": 10274
+    },
+    "qa_member": "xl/worksheets/sheet13.xml",
+    "readback_seconds": 33.2330901790001,
+    "sample_utc": [
+      "2024-01-01T08:00:00+00:00",
+      "2024-01-01T20:00:00+00:00",
+      "2024-02-15T19:00:00+00:00",
+      "2024-02-29T08:00:00+00:00",
+      "2024-02-29T20:00:00+00:00",
+      "2024-03-10T08:00:00+00:00",
+      "2024-03-10T09:00:00+00:00",
+      "2024-03-10T10:00:00+00:00",
+      "2024-03-10T19:00:00+00:00",
+      "2024-04-01T06:00:00+00:00"
+    ],
+    "sampled_raw_cells": 164310,
+    "sampled_weighted_cells": 164310,
+    "sealed_readback": "PASS",
+    "sha256": "730b87a6610b054ea96c12224f0d80b6b613f4c99ca483fae7efed7cd1b3d76c",
+    "status": "PASSED",
+    "summary_rows_checked": {
+      "Matched_Period": 32862,
+      "Monthly_Summary": 49293,
+      "Node_Summary": 16431
+    },
+    "valid_numerators": 13478126,
+    "valid_prices": 35654955,
+    "validated_utc": "2026-11-20T04:17:02.376035+00:00",
+    "worksheets": 79
+  },
+  "recovery": {
+    "config_sha256": "625037fecf8a8b28cf50719a0182034b35312cd8caf82f6a087ed18cd5aa76a4",
+    "internal_missing_named_requests": 6,
+    "raw_named_sha256": "14f24ebf3a78cae230173e1b72421639545472837ff39f74876bacd3e0d16d34",
+    "recovered_published_prices": 0,
+    "recovery_sha256": "e62edf9802b5489e1c274376765adae14898c18566a93e63e68079b9625c573e",
+    "requests": [
+      {
+        "additional_published_prices": 0,
+        "end_exclusive": "2024-01-29",
+        "ids": [
+          "TH_NP15_GEN-APND",
+          "TH_NP15_GEN_OFFPEAK-APND",
+          "TH_NP15_GEN_ONPEAK-APND",
+          "TH_SP15_GEN_OFFPEAK-APND",
+          "TH_SP15_GEN_ONPEAK-APND",
+          "TH_ZP26_GEN_OFFPEAK-APND",
+          "TH_ZP26_GEN_ONPEAK-APND"
+        ],
+        "named_valid_prices": 2688,
+        "source_manifest": "PRC_LMP_2024-01-01_71b0274e78de.json",
+        "source_sha256": "e4c5144bb6141f72a28a62848d6c4c4e2676c1f8f5273593928e14364a4f751c",
+        "start": "2024-01-01"
+      },
+      {
+        "additional_published_prices": 0,
+        "end_exclusive": "2024-02-01",
+        "ids": [
+          "TH_NP15_GEN-APND",
+          "TH_NP15_GEN_OFFPEAK-APND",
+          "TH_NP15_GEN_ONPEAK-APND",
+          "TH_SP15_GEN_OFFPEAK-APND",
+          "TH_SP15_GEN_ONPEAK-APND",
+          "TH_ZP26_GEN_OFFPEAK-APND",
+          "TH_ZP26_GEN_ONPEAK-APND"
+        ],
+        "named_valid_prices": 288,
+        "source_manifest": "PRC_LMP_2024-01-29_60539ae6330f.json",
+        "source_sha256": "189f6973302521c74de8de7b388b3050d119e31b456372907e0f5e1f5bc40a99",
+        "start": "2024-01-29"
+      },
+      {
+        "additional_published_prices": 0,
+        "end_exclusive": "2024-02-29",
+        "ids": [
+          "TH_NP15_GEN-APND",
+          "SCEN_6_PDRP102-APND",
+          "TH_NP15_GEN_OFFPEAK-APND",
+          "TH_NP15_GEN_ONPEAK-APND",
+          "TH_SP15_GEN_OFFPEAK-APND",
+          "TH_SP15_GEN_ONPEAK-APND",
+          "TH_ZP26_GEN_OFFPEAK-APND",
+          "TH_ZP26_GEN_ONPEAK-APND"
+        ],
+        "named_valid_prices": 2736,
+        "source_manifest": "PRC_LMP_2024-02-01_52b7e5b407b0.json",
+        "source_sha256": "7face964ec3c050ede49bf92389a00e692a563ff8f91f99778be7ecc03903e56",
+        "start": "2024-02-01"
+      },
+      {
+        "additional_published_prices": 0,
+        "end_exclusive": "2024-03-01",
+        "ids": [
+          "TH_NP15_GEN-APND",
+          "SCEN_6_PDRP102-APND",
+          "TH_NP15_GEN_OFFPEAK-APND",
+          "TH_NP15_GEN_ONPEAK-APND",
+          "TH_SP15_GEN_OFFPEAK-APND",
+          "TH_SP15_GEN_ONPEAK-APND",
+          "TH_ZP26_GEN_OFFPEAK-APND",
+          "TH_ZP26_GEN_ONPEAK-APND"
+        ],
+        "named_valid_prices": 96,
+        "source_manifest": "PRC_LMP_2024-02-29_e48de97fa76f.json",
+        "source_sha256": "97152c6bb92276ede8c183568d8849b050e9f09924e7b2bbb73304c29f4bb252",
+        "start": "2024-02-29"
+      },
+      {
+        "additional_published_prices": 0,
+        "end_exclusive": "2024-03-29",
+        "ids": [
+          "TH_NP15_GEN-APND",
+          "SCEN_6_PDRP102-APND",
+          "TH_NP15_GEN_OFFPEAK-APND",
+          "TH_NP15_GEN_ONPEAK-APND",
+          "TH_SP15_GEN_OFFPEAK-APND",
+          "TH_SP15_GEN_ONPEAK-APND",
+          "TH_ZP26_GEN_OFFPEAK-APND",
+          "TH_ZP26_GEN_ONPEAK-APND"
+        ],
+        "named_valid_prices": 3283,
+        "source_manifest": "PRC_LMP_2024-03-01_c9d3a6bf1454.json",
+        "source_sha256": "34433577ca85fb339618121c6640e18e7facfb80757c6c58331b744fcccc3609",
+        "start": "2024-03-01"
+      },
+      {
+        "additional_published_prices": 0,
+        "end_exclusive": "2024-04-01",
+        "ids": [
+          "TH_NP15_GEN-APND",
+          "TH_NP15_GEN_OFFPEAK-APND",
+          "TH_NP15_GEN_ONPEAK-APND",
+          "TH_SP15_GEN_OFFPEAK-APND",
+          "TH_SP15_GEN_ONPEAK-APND",
+          "TH_ZP26_GEN_OFFPEAK-APND",
+          "TH_ZP26_GEN_ONPEAK-APND"
+        ],
+        "named_valid_prices": 288,
+        "source_manifest": "PRC_LMP_2024-03-29_72803566e932.json",
+        "source_sha256": "37f952a532274017a47181f7f6087b236da5802d992b94072425bb1f4e53c2a2",
+        "start": "2024-03-29"
+      }
+    ]
+  },
+  "scope": "Internal real-data benchmark for 2024-01-01 through 2024-03-31 Pacific, using the quarter's union. This is separate from the final three-year inventory and annual deliverables."
+}
