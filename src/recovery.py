@@ -1,5 +1,6 @@
 """Check internally missing total-price positions with a second, named-node official retrieval."""
 import json
+from collections import deque
 import shutil
 import zipfile
 from datetime import timedelta
@@ -60,10 +61,18 @@ def run(inventory,first,end,dest):
                 p=pd.read_parquet(ROOT/"canonical"/f"{d}.parquet",filters=[("node_id","in",list(select))])
                 base.append(p)
             base=pd.concat(base,ignore_index=True).set_index(["node_id","utc_start"]).sort_index()
-            for j in range(0,len(nodes),7):
-                ids=list(dict.fromkeys([ANCHOR,*nodes[j:j+7]]))
+            pending=deque(nodes[j:j+48] for j in range(0,len(nodes),48))
+            while pending:
+                group=pending.popleft()
+                ids=list(dict.fromkeys([ANCHOR,*group]))
                 path=query(lo,C["report"],nodes=ids,end=hi);mf=ROOT/"manifests"/(path.stem+".json")
                 raw=named_data(path,lo,hi,ids)
+                known=base[base.index.get_level_values("node_id").isin(ids)&base.LMP.notna()].LMP
+                named=raw.LMP.reindex(known.index)
+                if named.isna().any():
+                    if len(group)<=1:raise ValueError("named request omits a published positive-control price "+path.name)
+                    cut=len(group)//2;pending.appendleft(group[cut:]);pending.appendleft(group[:cut])
+                    continue
                 old=base.reindex(raw.index)
                 for col in set(old)&set(raw)-{"node_name"}:
                     pair=old[col].notna()&raw[col].notna()
@@ -82,7 +91,7 @@ def run(inventory,first,end,dest):
                     add["source_sha256"]=sha(path);normalized.append(add)
                 sources.write(path,"cache/"+path.name);sources.write(mf,"manifests/"+mf.name)
                 requests.append(dict(start=str(lo),end_exclusive=str(hi),ids=ids,named_valid_prices=int(raw.LMP.notna().sum()),
-                    additional_published_prices=len(add),source_sha256=sha(path),source_manifest=mf.name))
+                    all_location_positive_prices_rechecked=len(known),additional_published_prices=len(add),source_sha256=sha(path),source_manifest=mf.name))
     out=pd.concat(normalized,ignore_index=True) if normalized else pd.DataFrame(columns=["node_id","utc_start","node_name","LMP","source_sha256"])
     if out.duplicated(["node_id","utc_start"]).any():raise ValueError("duplicate recovered source key")
     out.to_parquet(dest/"recovered_prices.parquet",index=False,compression="zstd")
