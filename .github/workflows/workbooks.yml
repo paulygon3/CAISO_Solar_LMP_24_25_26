@@ -51,6 +51,7 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python -u src/pipeline.py restore
       - run: python -u src/pipeline.py inventory
+      - run: python -u src/publish.py prepare
       - uses: actions/upload-artifact@v4
         with:
           name: historical-node-inventory
@@ -75,12 +76,8 @@ jobs:
           path: staging/inventory
       - run: python -u src/pipeline.py restore --year ${{ matrix.year }}
       - run: python -u src/pipeline.py build --year ${{ matrix.year }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: validated-workbook-${{ matrix.year }}
-          path: output/*.xlsx
-          compression-level: 0
-          retention-days: 14
+      - name: Stage the verified Excel workbook in the unpublished release
+        run: python -u src/publish.py year --year ${{ matrix.year }}
       - uses: actions/upload-artifact@v4
         with:
           name: annual-evidence-${{ matrix.year }}
@@ -96,11 +93,8 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - run: python -m pip install -r requirements.txt
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: validated-workbook-*
-          path: output
-          merge-multiple: true
+      - name: Fetch the three sealed annual files for publication readback
+        run: gh release download "caiso-annual-candidate-$GITHUB_RUN_ID" --pattern '*.xlsx' -D output
       - uses: actions/download-artifact@v4
         with:
           pattern: annual-evidence-*
