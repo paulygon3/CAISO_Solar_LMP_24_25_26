@@ -1,8 +1,18 @@
 # CAISO hourly zonal solar-weighted LMP
 
-This repository calculates day-ahead solar-weighted prices and node-to-hub basis for the union of CAISO OASIS pricing locations from January 1, 2024 through November 18, 2026. The calendar uses Pacific delivery dates. Each of NP15, ZP26 and SP15 has a fixed, two-location modeled solar profile.
+The study covers January 1, 2024 through November 18, 2026 in Pacific delivery time.
 
-**Key metrics report** · [Read online](results/KEY_METRICS.md) · [Download the two-page PDF](https://raw.githubusercontent.com/paulygon3/CAISO_Solar_LMP_24_25_26/main/results/CAISO_Key_Metrics.pdf)
+## Historical hourly solar generation and hub prices
+
+[Download historical hourly solar MW and day-ahead hub LMPs (CSV)](https://raw.githubusercontent.com/paulygon3/CAISO_Solar_LMP_24_25_26/main/results/historical_hourly/hourly_solar_and_hub_prices.csv) · [Read the coverage and actual-generation results](results/historical_hourly/README.md)
+
+Each row represents one delivery hour. The columns contain CAISO-reported solar production for NP15, ZP26 and SP15, positive exported energy and the corresponding CAISO day-ahead hub price.
+
+## Modeled solar benchmark
+
+The original annual workbooks calculate prices and node-to-hub basis for the historical union of CAISO OASIS pricing locations using a fixed, two-location typical-weather solar profile in each zone.
+
+**Modeled key metrics report** · [Read online](results/KEY_METRICS.md) · [Download the two-page PDF](https://raw.githubusercontent.com/paulygon3/CAISO_Solar_LMP_24_25_26/main/results/CAISO_Key_Metrics.pdf)
 
 The report compares hub prices, solar capture rates, negative-price exposure and the same 5,332 pricing locations across three years. To regenerate the tables, download the release’s `CAISO_provenance.zip`, install the repository requirements and run `python src/key_metrics_report.py /path/to/CAISO_provenance.zip`.
 

@@ -1,0 +1,15 @@
+{
+  "first_delivery": "2024-01-01",
+  "last_delivery": "2026-11-18",
+  "expected_delivery_hours": 25272,
+  "observed_solar_zone_hours": 75810,
+  "expected_solar_zone_hours": 75816,
+  "valid_day_ahead_zone_hours": 75816,
+  "missing_solar_zone_hours": 6,
+  "duplicate_keys_across_retrievals": 5721,
+  "source_response_types": {
+    "CSV": 44
+  },
+  "raw_archive_sha256": "13fe7cf9a2d183340d21ae1c6441ac364f2111313da0613025275a6042916337",
+  "day_ahead_price_input_sha256": "28288d2f2cc4abbb7b23086063aca6166bf2d94c4089af63a9a2cd33806eac25"
+}
