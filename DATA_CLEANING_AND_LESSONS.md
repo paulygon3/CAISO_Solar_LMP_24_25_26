@@ -1,0 +1,45 @@
+# CAISO zonal solar-weighted prices
+
+## Run outcome
+
+The run reached validated profiles and an all-location pilot. See `manifests/run.json` for status, dates, source counts, and the measured storage estimates. The annual workbooks and associated production checks are pending. The three-hub calculation has its own evidence in `manifests/hubs.json` and `results/verified_hub_periods.csv` when completed. The supplied PDF uses one common Fresno profile and year-specific inventories. All quantities in this checkpoint come from fresh source retrieval or the requested calendar.
+
+## Findings and treatment
+
+| Finding | Scope and detection | Treatment and remaining work |
+|---|---|---|
+| The first single-node HTTPS price query returned HTTP 503. | Initial CAISO access log and saved response in `manifests/initial-access.json`. The production portal itself returned HTML. | Verified the current official FAQ, the one-trade-date all-node parameter, and the body, schema and CRC of subsequent successful DAM ZIPs. A transport response cannot establish a CAISO publication gap. The same June date was not needed for pilot conclusions. |
+| The oldest linked PDF is dated 2010. | `evidence/reference.txt`. The current FAQ explicitly documents PRC_LMP v12, DAM and grp_type=ALL for one local trade date. | Used the current FAQ and actual report responses. Downloaded four ATLAS reports and verified their actual column headers. Current OASIS technical developer documentation may require registration. A six-second local request interval is a conservative run setting. The official numeric rate ceiling and a publication-revision precedence rule remain unverified. |
+| Source prices have one row per component, node, market and UTC interval. | Every CSV in the six all-node pilot ZIPs, including a fourth non-total component (MGHG) on November 18, 2026. The value field in the price report is named MW. | Read total LMP and component values as USD/MWh. Preserve every original ZIP and component. Check duplicates at the component grain. Quarantine unresolved conflicting records. Primary component ratios use complete price-valid support. Published totals drive price calculations. Full-population exception counts remain unknown. |
+| Published hourly support varies by node. | Six-day price pilot, per-date partial counts in `manifests/pilot-qa.json`. | Keep missing prices blank. Retain zero and negative prices. Give each full period its complete calendar denominator. Historical observation endpoints do not prove retirement. Unretrieved dates in `manifests/date-status.csv` are acquisition status. |
+| The dated hub-membership table only assigns part of the observed universe. | On January 15, 2025, 1,899 of 16,682 observed IDs had a unique exact membership or were a named hub. `manifests/pilot_node_mapping.csv.gz`. | Preserve unresolved IDs and unweighted results. No utility, station-prefix, PDRP, or proximity shortcut was used. Pilot counts are limited to available evidence. External-area and inferred totals need historical evidence before publication. |
+| Equal-capacity composites give three different hourly series. | Six exact IDs joined to the CAISO price-map coordinates and active 2025 ATLAS memberships. Two locations per zone. `config.json` and site-specific PVWatts manifests contain model inputs and returned weather grids. | Fixed NSRDB TMY and PVWatts V8 across years. Axis tilt 0°, azimuth 180°, array_type 3, module_type 0, losses 14%, GCR 0.4, DC/AC 1.3 and inverter efficiency 96%. All six were monofacial with default dataset albedo and default remaining model parameters. Coordinates are CAISO map markers. They approximate weather points, not surveyed plant centroids. Selection spans different parts of each zone without purporting to estimate fleet capacity. |
+| Market delivery time and solar standard time differ during DST. | Transitions in actual CAISO files contained 23 and 25 hourly intervals. Every UTC price hour has a single fixed-offset UTC−08 solar calendar key. | Treat PVWatts index 0 as the January 1 local-standard hour beginning at midnight. The hourly sample belongs to that interval, even where the resource irradiance timestamp is midpoint. Map month, day and hour cyclically. The 24 February 29 weights in 2024, per zone, average the matching February 28 and March 1 hours. No missing-data repairs were needed. All fitted profiles were checked in readback. |
+| The planned storage footprint exceeds free workspace disk. | Actual pilot ZIPs, lossless columnar readback, constant-memory Excel export, archive CRC and every value in one day's two sets of matrices. See `manifests/cache-sizing.json`, `benchmark.json`, `checkpoint-readback.json`. | Six-day means project to 12.5 GiB in original ZIPs or 6.5 GiB in lossless row-preserving Parquet before matrices. The one-day export projects to about 2.2 GiB of compressed matrices for the requested dates and 5.5 GiB of temporary sheet XML for one 366-day year. Prices, mapping and membership counts vary by day. Re-measure with the full universe in a larger workspace before production export. |
+| The chat's designated output directory is absent on the selected machine. | Directory creation through the sandbox returned a read-only filesystem error. The approved follow-up command returned permission denied at the root. | Checkpoint files are in the shared cloud workspace. Restore a writable output mount before publishing annual workbooks. |
+
+The full named-hub series initially failed its calendar assertion by 24 hours. February 29, 2024 was both a one-day pilot and a scheduled month-end remainder with exactly the same request identity. Selecting archives by their scheduled interval pairs restored the reused file. The full UTC-hour-set check and separate pilot comparisons were rerun. This was a processing bug. See `src/history_references.py`, `src/hubs.py`, and `manifests/hub-history-pilot-comparison.json`.
+
+## Interpretation
+
+Within-zone comparisons use a common standardized production shape. Cross-zone comparisons reflect both prices and different production shapes. The fixed TMY removes actual-year weather variation. The 90% display threshold has no statistical error bound. Mapping uncertainty and missing prices affect different parts of the calculation. Complete component inputs establish that the fields exist on common support. This alone cannot independently validate the economic decomposition.
+
+Hub basis uses the same node-zone weights on both prices over their common UTC support. The three hub reference results use each hub's own-zone weights. Each period's denominator uses all expected hours, with blank available-price estimates at zero matched weight. Coverage and eligible-display rules are separate from retained estimates.
+
+## Resume checks
+
+1. Start with a writable location having a planning allowance of 32 GiB free. Update this allowance after measuring more days. Establish the intended final file location.
+2. Reuse verified archives using exact request parameters, configuration hash, checksum and schema. Recheck both a single-hub request and an all-location request after any interface change. Honor changed source rate limits and backoff.
+3. Preserve every official archive and manifested effective period. Build the three-year price-ID union before allocating columns. Check classification and zone evidence as-of each delivery interval. Report direct, inferred, conflicting, outside and unresolved counts separately. Recheck exact duplicates, conflicting revisions, and zero-observation node-months.
+4. Reconcile additive monthly numbers to annual and matched-period calculations. Check independent hour and solar coverage, component completeness, negative exposure, all three pairwise denominators and leap-day-excluded sensitivity.
+5. Choose deterministic matrix batches for the full union. Measure peak disk, RAM and representative write, open and readback times. Include all raw and weighted matrices and preserve negative values, zeros, blanks and string IDs. Keep reference rows outside nodal colour scales.
+6. Publish only after checking actual saved files against canonical hourly data, sheet indexes, membership dates, protected summary fields, annual end dates, and SHA-256 checksums. Identify exhaustive and sampled checks separately.
+
+## Sources
+
+- CAISO OASIS FAQ, including the one-trade-date all-nodes day-ahead example. https://www.caiso.com/documents/oasis-frequently-asked-questions.pdf
+- Production OASIS and dated ATLAS hub membership. https://oasis.caiso.com/mrioasis/logon.do
+- CAISO price map. The snapshot and exact reference coordinates are preserved locally. https://www.caiso.com/todays-outlook/prices
+- CAISO component sign convention and greenhouse-gas treatment, page 12 footnote 4. https://stakeholdercenter.caiso.com/InitiativeDocuments/Revised-Draft-Final-Proposal-EDAM-Congestion-Revenue-Allocation-May-19-2025.pdf
+- NSRDB TMY, PVWatts V8 hourly AC watts and station metadata. https://developer.nlr.gov/docs/solar/pvwatts/v8/
+- SAM resource interval convention. https://samrepo.nlr.gov/help/pvwatts_location_and_resource.html

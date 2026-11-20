@@ -1,0 +1,49 @@
+CAISO hourly zonal solar-weighted prices | Resumable run
+========================================================
+Trade dates start January 1, 2024 and stop November 18, 2026 inclusive, Pacific time.
+Run status, measured capacity, completed stages, and unfinished stages are in manifests/run.json.
+The source PDF supplied by the requester was a reporting example. Its prices, inventories,
+coverage rates, mapping, and Fresno production profile are not pipeline inputs.
+
+Python 3.12 and IANA timezone data are required. Run commands from this directory.
+Install the pinned packages in a virtual environment, for example with python -m pip install -r requirements.txt.
+On the originating Cloud computer /workspace/work/pydeps contains the locally installed pyarrow wheel.
+Set PYTHONPATH=/workspace/work/pydeps there when a command uses Parquet. pandas, numpy,
+openpyxl and XlsxWriter come from the original Python environment. Public PVWatts queries use
+the documentation's demo key. A private key may be supplied through PVWATTS_API_KEY in secure
+runtime configuration. Never include a private key in source or in archived URLs.
+
+Commands and current scope
+--------------------------
+python src/oasis.py reference           January 2025 official report preflight.
+python src/solar.py                     Validate cached site inputs and rebuild three hourly calendars.
+python src/oasis.py pilot               Retrieve/resume six daily all-location and separate three-hub batches.
+python src/history_references.py hubs   Retrieve/resume the complete three-hub hourly price history.
+python src/hubs.py                      Calculate standalone hub prices and pairwise basis on the node's weights.
+python src/process_daily.py             Canonicalize, inspect component support and reopen each verified daily batch.
+python src/extra_pilot.py                Expand dated pilot membership and compare another four location IDs.
+python src/pilot.py                     Check all pilot dates and build the measured one-day matrix benchmark.
+python src/size_cache.py                Test lossless columnar representation of every original CSV cell.
+python src/readback.py                  Validate saved production profiles and the one-day benchmark without rebuilding.
+python -m unittest discover -s tests -v  Run isolated calculation fixtures.
+python src/document.py                  Refresh run and stage inventory and date-level acquisition statuses.
+python src/oasis.py download             Retrieve/resume the full all-location range on sufficient storage.
+--start and --end-exclusive narrow date boundaries for a resume. --refresh requests a new source copy.
+python src/history_references.py mapping obtains historical membership queries in short windows.
+These are public HTTPS requests. There is no paid download code.
+
+Data locations
+--------------
+cache/       Verified source response ZIPs and original unmodified production PVWatts JSON.
+evidence/    Official source preflight documents/responses, geographic snapshot, and effective mapping used for site choice.
+profiles/    Every requested UTC pricing hour and three zone-specific normalized weights and equivalent outputs.
+canonical/   All six pilot days of LMPs and every published component. Full source columns remain in the ZIPs.
+results/     Full-period reference-hub aggregates, when validated, from independently acquired hourly hub histories.
+manifests/   Request parameters, source and output checksums, schemas, dates, checks, counts, and retry history.
+benchmark/   Internal sizing XLSX. It covers one day. It is outside the final annual workbook directory.
+src/,tests/  Reusable source and isolated synthetic fixtures.
+
+The annual nodal aggregations, production exporter and annual readback are pending. The checkpoint is
+intended for continuation. Running the downloader alone does not create the three annual workbooks.
+Annual publication must retain the three-year historical universe, dated mapping and explicit blanks,
+and must pass the full tests in the original task. No final workbook has been published.

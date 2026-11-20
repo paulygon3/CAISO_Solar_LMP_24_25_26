@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+cache/
+canonical/
+quarantine/
+staging/
+output/
+benchmark/
+*.tmp
+*.part

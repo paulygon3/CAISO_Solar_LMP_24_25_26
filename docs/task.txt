@@ -1,0 +1,1184 @@
+# Codex Task: Build CAISO-Wide Hourly Zonal Solar-Weighted LMP Excel Workbooks, 2024–2026
+
+## Objective
+
+Develop and execute a complete, reproducible Python pipeline that:
+
+1. Downloads actual published CAISO hourly day-ahead LMP data for every available published pricing location.
+2. Builds three standardized hourly solar-production profiles: NP15, ZP26, and SP15.
+3. Maps pricing nodes to the appropriate solar zone using documented evidence.
+4. Calculates zonal solar-weighted nodal prices, monthly and annual summaries, matched-period comparisons, and basis to all three trading hubs.
+5. Produces exactly three final Excel workbooks:
+
+- `CAISO_Solar_Weighted_LMP_2024.xlsx` — January 1 through December 31, 2024.
+- `CAISO_Solar_Weighted_LMP_2025.xlsx` — January 1 through December 31, 2025.
+- `CAISO_Solar_Weighted_LMP_2026.xlsx` — January 1 through November 18, 2026, inclusive.
+
+This is an implementation and data-delivery task, not a research summary or prototype. Complete the downloads, processing, validation, and workbook creation. Do not stop after writing code.
+
+Never fabricate prices, interpolate missing LMPs, replace missing prices with zero, or substitute simulated prices.
+
+If credentials, network restrictions, source availability, runtime, storage, or other constraints prevent completion, identify the exact blocker, preserve resumable progress, and state what remains. Do not claim execution or completeness that has not been established.
+
+## 1. Scope and operating instructions
+
+This task starts from scratch in this environment.
+
+- Use official CAISO hourly day-ahead prices.
+- Use three distinct standardized TMY-based solar-production profiles: NP15, ZP26, and SP15.
+- Apply the appropriate zonal profile to each mapped node.
+- Keep each zone’s profile fixed across the three analysis years, subject to documented calendar mapping.
+- Do not use one Fresno or system-wide solar profile for all nodes.
+- Do not substitute real-time prices, YesEnergy data, actual CAISO system-wide solar generation, or unrelated datasets.
+- Do not import node counts, numerical benchmarks, data-gap dates, or conclusions from another environment.
+- Treat previously discussed problems as risks to test, not findings to assume.
+- Do not silently restrict the scope to generator nodes, currently active nodes, or a small shortlist.
+- Calculate each node’s basis to all three hubs; do not choose just one comparison hub.
+- No geographic visualization is required. Node-to-zone mapping is required, but a map image is not.
+- Proceed with routine implementation and free public-data retrieval without repeatedly asking permission.
+- Ask before paid access, material methodological substitutions, or a necessary change to the three-workbook requirement.
+
+Prioritize completing the required baseline. Do not start optional historical-weather scenarios or unrelated enhancements before it is complete.
+
+## 2. Required authoritative sources
+
+### CAISO prices and reference data
+
+Use these official sources:
+
+- OASIS: [https://oasis.caiso.com/mrioasis/logon.do](https://oasis.caiso.com/mrioasis/logon.do)
+- Candidate API endpoint: [https://oasis.caiso.com/oasisapi/SingleZip](https://oasis.caiso.com/oasisapi/SingleZip)
+- Reference specification: [https://www.caiso.com/documents/oasisapispecification.pdf](https://www.caiso.com/documents/oasisapispecification.pdf)
+- Historical downloader: [https://oasis-bulk.caiso.com/](https://oasis-bulk.caiso.com/)
+- OASIS information: [https://www.caiso.com/systems-applications/portals-applications/open-access-same-time-information-system-oasis](https://www.caiso.com/systems-applications/portals-applications/open-access-same-time-information-system-oasis)
+
+Before large requests, verify:
+
+- Current production endpoint.
+- Report names and versions.
+- Market identifiers.
+- Required parameters.
+- Time and date semantics.
+- Historical availability.
+- Request-size and rate limits.
+- Available publication/revision information.
+
+Treat older documentation as a starting point, not proof that its parameters remain current.
+
+Use `PRC_LMP` with Day-Ahead Market `DAM`, or a verified official equivalent if the interface has changed.
+
+Investigate applicable official ATLAS reference reports, including `ATL_PNODE`, `ATL_APNODE`, `ATL_HUB`, and available membership or zone-mapping reports. Verify the exact supported report names rather than assuming them.
+
+Use efficient official bulk retrieval when appropriate, but:
+
+- Do not initiate requester-pays or other paid downloads without explicit authorization.
+- Do not assume AWS credentials are available.
+- Prefer normal public OASIS retrieval when feasible.
+- Inspect response contents; an HTTP 200 response alone does not establish a successful data download.
+
+Do not use unofficial reconstructed price datasets when official data is obtainable.
+
+### Solar resource and modeling
+
+Use:
+
+- NSRDB: [https://nsrdb.nlr.gov/](https://nsrdb.nlr.gov/)
+- NSRDB dataset query: [https://developer.nlr.gov/docs/solar/nsrdb/nsrdb_data_query/](https://developer.nlr.gov/docs/solar/nsrdb/nsrdb_data_query/)
+- PVWatts V8 API: [https://developer.nlr.gov/docs/solar/pvwatts/v8/](https://developer.nlr.gov/docs/solar/pvwatts/v8/)
+- PVWatts calculator: [https://pvwatts.nlr.gov/](https://pvwatts.nlr.gov/)
+
+Use PVWatts V8 with documented NSRDB TMY resources.
+
+If PVWatts supplies the required modeled profile directly using an NSRDB resource, a separate weather download is not necessary unless needed for verification or reproducibility.
+
+Read API credentials from environment variables or secure configuration. Never expose secrets in code, logs, manifests, workbooks, cached request URLs, or version control.
+
+If required credentials are unavailable, investigate verified official alternatives. Do not silently switch to a different solar model or invent a replacement profile.
+
+## 3. Pipeline architecture and reproducibility
+
+Implement independently resumable stages:
+
+1. Environment and source-access preflight.
+2. Reference-data and node-zone mapping discovery.
+3. Solar-profile design and pilot generation.
+4. Small market-data pilot tests.
+5. Full price retrieval.
+6. Cleaning and canonicalization.
+7. Additive aggregation and metrics.
+8. Workbook creation.
+9. Readback validation.
+10. Documentation and final handoff.
+
+Use a configuration file for methodological choices, profile definitions, thresholds, and requested dates.
+
+Provide commands or equivalent stages for:
+
+- Preflight.
+- Download/resume.
+- Solar-profile generation.
+- Processing.
+- Workbook build.
+- Diagnostics.
+- Readback without rebuilding.
+- Documentation-only refresh.
+
+Use temporary files and atomic replacement for completed outputs. Do not replace a validated output with a partial file after an error.
+
+Record:
+
+- Run ID.
+- Code version or commit.
+- Configuration hash.
+- Sanitized source request parameters.
+- Retrieval timestamp in UTC.
+- Report/source version.
+- Raw-file checksum.
+- Row counts and schemas.
+- Retry/resume history.
+- Validation results.
+- Output checksums and sizes.
+
+Reuse cached data only when request identity, configuration, schema, integrity, and relevant checks match. File timestamps alone do not establish correctness or freshness.
+
+## 4. Market-data requirements and node universe
+
+Download hourly DAM LMPs for all available published pricing locations over the requested periods.
+
+Preserve, where published:
+
+- Exact node identifier.
+- Exact node name.
+- PNode/APNode classification.
+- Node subtype and descriptions.
+- BAA/market classification.
+- TAC and other area attributes.
+- Effective dates.
+- UTC interval start and end.
+- Source delivery date/hour and interval labels.
+- Total LMP.
+- Published energy, congestion, loss, and additional components.
+- Publication/revision identifiers.
+
+Do not assume the decomposition contains exactly three components.
+
+Treat identifiers as strings unless the source explicitly requires otherwise. Use canonical `node_id` and `node_name` fields. Do not introduce identifiers from a different data environment.
+
+### Historical node coverage
+
+Build the analysis universe from the union of nodes observed in the requested historical price data.
+
+Supplement that universe with official metadata, but:
+
+- Do not use current metadata as an inner-join filter that discards historical nodes.
+- Retain priced nodes without metadata matches and flag them.
+- Do not limit the dataset to active or generator nodes.
+- Retain published external-market nodes.
+- Make CAISO-BAA nodes independently filterable when classification is supported.
+- Keep unknown classifications explicitly unknown.
+- Preserve historical effective dates where available.
+- Do not merge IDs based on similar names.
+- Do not infer retirement solely from the last observed price.
+
+Use this historical node universe consistently across the annual workbooks. A node with no observations in a particular year remains represented with an appropriate no-observation status.
+
+### Trading hubs
+
+Include and verify:
+
+- SP15: `TH_SP15_GEN-APND`
+- NP15: `TH_NP15_GEN-APND`
+- ZP26: `TH_ZP26_GEN-APND`
+
+Retain hubs as reference rows with an explicit flag. Keep reference rows identifiable outside the nodal heatmap colour-scale population.
+
+## 5. Node-to-solar-zone mapping
+
+Assign each node to NP15, ZP26, or SP15 using documented evidence.
+
+For every assignment retain:
+
+- `solar_zone`
+- `zone_mapping_method`
+- `zone_mapping_source`
+- `zone_mapping_status`
+- Effective dates, where available.
+- Conflicting evidence or limitations.
+
+Distinguish at least:
+
+- `DIRECT`
+- `INFERRED`
+- `CONFLICTING`
+- `UNRESOLVED`
+- `OUTSIDE_THREE_ZONE_SCOPE`
+
+### Mapping hierarchy
+
+1. Direct official node-to-zone information.
+2. Verified relationships in official membership/reference datasets.
+3. Carefully supported inference where direct information is unavailable.
+
+Do not assume a trading-hub membership list contains every pricing node associated with the corresponding geographic or electrical zone.
+
+TAC areas, hub memberships, and solar-weighting zones are not automatically interchangeable.
+
+Do not automatically:
+
+- Assign every PG&E-TAC node to NP15.
+- Treat SCE/SDGE or other utility labels as sufficient zone evidence.
+- Infer zone from a PDRP sub-LAP code without validating its meaning.
+- Match stations solely through similar name fragments.
+
+A station-based inference is allowed only when station identity is sufficiently supported and directly mapped nodes at that station agree on the zone. Label it `INFERRED`, not `DIRECT`.
+
+Assign each hub its corresponding profile explicitly.
+
+If node assignments change over time, apply documented effective dates. Do not manufacture historical dates from current metadata.
+
+### Unresolved and external nodes
+
+Retain their raw prices and unweighted metrics.
+
+If no defensible zone assignment exists:
+
+- Leave the primary assigned-zone solar-weighted estimate blank.
+- State that zone mapping is unresolved or outside scope.
+- Do not label this as missing-price coverage.
+- Do not silently use NP15 or a system-wide fallback.
+- Keep the node in the dictionary, summaries, and raw-price matrices.
+- Leave its assigned-zone weighted matrix values blank.
+
+Do not calculate optional alternative-profile sensitivity results unless needed to explain a specific issue or separately requested.
+
+Add useful name-based indicators such as `pdrp_name_flag`, but label these as naming heuristics rather than verified registration classifications. Do not silently exclude demand-response nodes.
+
+### Mapping preflight
+
+Before expensive full retrieval, assess mapping feasibility with official reference data and pilot observations.
+
+Document:
+
+- Directly mapped nodes.
+- Inferred mappings.
+- Conflicts.
+- Unresolved mappings.
+- External/out-of-scope classifications.
+
+Do not let a large unresolved population disappear behind an apparently complete zonal summary. If a material mapping obstacle requires a new assumption, explain it before adopting that assumption.
+
+## 6. Standardized zonal solar-production profiles
+
+The primary scenario uses three fixed TMY-based modeled profiles, not actual-year generation.
+
+The goal is:
+
+- Consistent solar assumptions within each zone.
+- Consistent zone-specific assumptions across years.
+- Real differences in modeled production timing between zones.
+
+### Profile construction
+
+Develop a representative profile separately for NP15, ZP26, and SP15.
+
+Prefer a documented multi-location composite where practical.
+
+For each zone:
+
+1. Identify suitable solar-model locations.
+2. Support their zonal placement with official geographic or zone evidence where obtainable.
+3. Avoid selecting a location solely because it is in a particular utility’s service territory.
+4. Document reference coordinates and returned weather-grid/station locations.
+5. Explain the location-selection rationale.
+6. Define the location weights.
+7. Keep the locations, weights, resource, and model configuration fixed across the three years.
+
+If authoritative installed-capacity weights are readily available and suitable, they may be used.
+
+Otherwise, use an explicitly labeled standardized alternative, such as an equal-capacity composite of documented representative locations. Do not invent installed-capacity weights or describe an equal-weight composite as actual fleet output.
+
+Use a small, defensible set of locations rather than creating an open-ended geographic research project. Document representativeness limitations.
+
+If defensible zonal placement or profile construction cannot be established, identify the blocker. Do not silently revert to one Fresno profile.
+
+### PV system assumptions
+
+Apply the same utility-scale configuration at every modeled location:
+
+| Parameter | Requirement |
+|---|---|
+| Equivalent AC capacity | 100 MW |
+| Equivalent DC capacity | 130 MW |
+| DC/AC ratio | 1.30 |
+| Technology | Utility-scale PV |
+| Tracking | One-axis with backtracking |
+| Module | Standard |
+| System losses | 14% |
+| Ground coverage ratio | 0.40 |
+| Curtailment | Excluded |
+| Battery storage | Excluded |
+
+Verify PVWatts API parameters and units before execution.
+
+Expected configuration, subject to documentation verification:
+
+- `system_capacity = 130000` kW DC.
+- `dc_ac_ratio = 1.30`.
+- One-axis tracking with backtracking.
+- Standard module.
+- `losses = 14`.
+- `gcr = 0.40`.
+- Hourly output.
+- NSRDB TMY resource.
+- Explicit tracking-axis tilt and azimuth assumptions.
+- Explicit inverter efficiency and material defaults.
+
+Use a horizontal north–south tracking axis unless a documented modeling requirement supports a different configuration.
+
+PVWatts hourly `ac` output is expected in watts; verify against current documentation and convert consistently:
+
+`solar_output_mw = ac_watts / 1_000_000`
+
+`normalized_output = solar_output_mw / 100`
+
+For zone `z`:
+
+`zonal_solar_weight_z,t = sum(location_weight_k × normalized_output_k,t)`
+
+Require location weights within each zone to sum to one.
+
+The equivalent zonal output is:
+
+`zonal_output_mw_z,t = zonal_solar_weight_z,t × 100`
+
+For aggregation:
+
+`weight_hours_z,t = zonal_solar_weight_z,t × interval_duration_hours`
+
+For hourly records, weight-hours are numerically equal to the normalized weight.
+
+Validate negative, nonfinite, or unexpectedly high output. Do not silently clip unexpected values to force an expected range. Preserve originals and document any correction.
+
+### Scenario interpretation
+
+Describe the results as standardized modeled zonal solar-production profiles.
+
+Do not describe them as:
+
+- Actual historical zonal solar generation.
+- Exact installed-fleet output.
+- Actual resource capture revenue.
+- Curtailment-adjusted production.
+
+Do not mix TMY and actual-year weather results under one scenario label.
+
+## 7. Timestamp alignment, DST, and leap day
+
+Use timezone-aware timestamps throughout.
+
+- Canonical key: UTC interval start.
+- Preserve source timestamps and interval definitions.
+- Display local delivery time in `America/Los_Angeles`.
+- Distinguish repeated fall-back hours through UTC and local offset.
+- Do not create nonexistent spring-forward hours.
+- Explicitly handle beginning-of-hour versus ending-of-hour source labels.
+- Filter final records by Pacific delivery date, not an assumed UTC date.
+- Derive expected hours programmatically.
+
+Requested local periods:
+
+- 2024: `[2024-01-01 00:00, 2025-01-01 00:00)`.
+- 2025: `[2025-01-01 00:00, 2026-01-01 00:00)`.
+- 2026: `[2026-01-01 00:00, 2026-11-19 00:00)`.
+
+Convert those boundaries to UTC.
+
+Do not include delivery dates after November 18 in the 2026 workbook.
+
+### TMY mapping
+
+For every location and zone:
+
+- Cache the original model response and metadata.
+- Verify local standard-time offset and output interval labeling.
+- Do not treat TMY source-year labels as actual historical years.
+- Map by standard-time month, day, and hour.
+- Do not use a simple day-of-year join that shifts dates after February in leap years.
+- Map every requested UTC pricing hour to exactly one modeled profile hour.
+- Document cyclic TMY wrapping at year boundaries.
+- For February 29, use the average of corresponding February 28 and March 1 standard-time hourly values.
+- Flag leap-day synthetic mapping separately from missing-data repairs.
+- Preserve March–December calendar alignment.
+- Convert modeled standard-time hours to UTC before joining with prices.
+
+Missing modeled solar values are a source/model/mapping issue. Retry or repair the source or mapping problem; do not silently fill unknown daylight output with zero.
+
+Track separately:
+
+- Leap-day synthetic-hour count.
+- Missing-data repair-hour count.
+- Repaired-weight share, if applicable.
+- Repair method.
+
+A zero repaired-energy share does not imply that no hours were repaired.
+
+## 8. Data cleaning and canonicalization
+
+### Source grain
+
+Determine the actual source grain before deduplication.
+
+Distinct component rows are not duplicate total-price observations.
+
+Canonical keys must distinguish:
+
+- Node.
+- Market.
+- UTC interval.
+- Component.
+- Applicable publication/revision.
+
+Pivot components only after verifying key uniqueness and publication handling.
+
+### Duplicates and revisions
+
+- Remove exact duplicates deterministically and count them.
+- For conflicting records, use a verified source publication/revision precedence rule where available.
+- Preserve the original records and an audit trail.
+- Do not arbitrarily average prices, take a maximum, or select the first record.
+- Quarantine unresolved conflicts and flag affected calculations.
+
+### Join checks
+
+For every important join:
+
+- Normalize key types.
+- Verify intended cardinality.
+- Compare pre/post row and node counts.
+- Record unmatched keys.
+- Detect multiplication or row loss.
+- Keep metadata/mapping failures distinct from missing prices.
+
+Do not introduce environment-specific workarounds unless a problem is demonstrated here.
+
+### Changes in node availability
+
+Detect:
+
+- First and last observed price.
+- Long internal gaps.
+- Sudden widespread drop-offs.
+- New IDs near disappearance dates.
+- Metadata effective-date conflicts.
+
+Treat potential renames, replacements, and retirements as hypotheses unless supported by evidence.
+
+## 9. Core zonal solar-weighted LMP calculation
+
+For node `i`, timestamp `t`, and its applicable assigned zone `z(i,t)`:
+
+`node_weight_hours_i,t = zonal_solar_weight_z(i,t),t × interval_duration_hours_t`
+
+For a requested period `P`, define:
+
+- Expected pricing hours.
+- Hours with valid node prices.
+- Hours with a valid applicable zonal weight.
+- Matched valid node-price/weight hours.
+
+Calculate:
+
+`weighted_lmp_numerator_i,P = sum(LMP_i,t × node_weight_hours_i,t)` over matched valid hours.
+
+`matched_weight_hours_i,P = sum(node_weight_hours_i,t)` over matched valid hours.
+
+`solar_weighted_lmp_usd_per_mwh = weighted_lmp_numerator / matched_weight_hours`
+
+If the denominator is zero, return blank with a reason.
+
+### Full-period solar denominator
+
+For a completely mapped node:
+
+`full_period_weight_hours_i,P = sum(applicable node-zone weight_hours over all expected hours)`
+
+`solar_coverage_pct = 100 × matched_weight_hours / full_period_weight_hours`
+
+Do not shrink the denominator to observed pricing dates.
+
+If mapping or solar-profile gaps prevent a valid full-period denominator:
+
+- Leave full-period solar coverage and the primary assigned-zone estimate unreported.
+- Flag the mapping/profile problem.
+- Do not disguise it as ordinary price missingness.
+
+### Hour coverage
+
+`hour_coverage_pct = 100 × valid_price_duration / expected_period_duration`
+
+Hour coverage can be calculated even when zone mapping is unresolved.
+
+For hourly inputs, report expected hours and valid-price hours explicitly.
+
+### Missing and zero values
+
+- Missing prices are excluded from the weighted numerator and matched denominator.
+- Missing prices are never zero-filled.
+- Valid zero and negative prices remain valid.
+- A valid price during a zero-output hour contributes zero to the weighted numerator.
+- A missing price remains blank in both raw and weighted matrices, including at night.
+
+## 10. Retained estimates, quality statuses, and display eligibility
+
+Provide separate fields:
+
+- `solar_weighted_lmp_usd_per_mwh`
+- `solar_coverage_pct`
+- `hour_coverage_pct`
+- `solar_coverage_status`
+- `hour_coverage_status`
+- `heatmap_eligible`
+- `heatmap_lmp_usd_per_mwh`
+- `heatmap_layer`
+- `coverage_status` or exclusion reason
+- Zone-mapping status.
+
+Coverage tiers, independently applied:
+
+- PASS: ≥98%.
+- WARN: ≥90% and <98%.
+- FAIL: <90%.
+
+Use explicit statuses for:
+
+- `NO_ESTIMATE`
+- `UNRESOLVED_ZONE`
+- `CONFLICTING_ZONE`
+- `OUTSIDE_THREE_ZONE_SCOPE`
+- `PROFILE_GAP`
+
+Heatmap eligibility requires:
+
+- A valid assigned-zone estimate.
+- An accepted direct or documented inferred zone assignment.
+- Valid full-period solar denominator.
+- Solar coverage ≥90%.
+
+Retain calculable low-coverage estimates, but blank only the heatmap-facing field when ineligible.
+
+Suggested display layers:
+
+- `REFERENCE`
+- `HEATMAP`
+- `LOW_COVERAGE`
+- `NO_ESTIMATE`
+- `UNMAPPED`
+
+Document that 90% is a project display threshold, not an accuracy guarantee.
+
+A node can pass solar coverage while failing hour coverage. Preserve both statuses.
+
+Reference rows may satisfy coverage eligibility but remain separately classified outside the normal nodal colour scale.
+
+## 11. Additional node metrics
+
+Calculate by annual/YTD, monthly, and matched-calendar period:
+
+- Simple time-weighted average LMP.
+- Solar-weighted LMP.
+- Solar capture rate and status.
+- Weighted published components, where supported.
+- Solar-weighted negative-price exposure.
+- Valid, missing, zero, negative, and extreme-price counts.
+- Minimum and maximum LMP.
+- First and last observed pricing timestamps.
+- Partial-period availability flag.
+- Zone-mapping flags.
+- Component completeness and reconciliation status.
+
+### Simple average
+
+For hourly observations, calculate the ordinary average over valid hourly prices. If interval durations differ, use duration weighting and explain why.
+
+### Capture rate
+
+`solar_capture_rate = solar_weighted_lmp / time_weighted_lmp`
+
+Report the conventional ratio only when the denominator is positive and not near zero.
+
+For zero, near-zero, or negative denominators, leave the conventional ratio blank and state why. Document the numerical near-zero tolerance.
+
+### Negative-price exposure
+
+`negative_price_solar_share = sum(node_weight_hours where valid LMP < 0) / matched_weight_hours`
+
+State that the denominator is available-price solar weight.
+
+### Normalized hourly contribution
+
+For an explicitly defined node-period:
+
+`normalized_contribution_i,t = LMP_i,t × node_weight_hours_i,t / matched_weight_hours_i,P`
+
+Its sum must equal the retained SWLMP.
+
+Persist normalized contributions in intermediate data or provide a reproducible calculation. Another complete set of Excel matrices is not required.
+
+## 12. Published components and derived energy protection
+
+Preserve each published component directly.
+
+Distinguish published energy from energy calculated as a residual. Do not assume the decomposition contains only energy, congestion, and loss.
+
+Verify:
+
+- Component definitions.
+- Signs.
+- Units.
+- Additional applicable components.
+- Numerical/rounding tolerance.
+
+For every component retain sufficient additive information:
+
+- Component-valid count.
+- LMP-valid hours missing that component.
+- Component-matched weight.
+- Component weighted numerator.
+- Common complete-component support where applicable.
+
+Do not omit missing components from the numerator and divide by the total LMP denominator, implicitly treating missing values as zero.
+
+For primary component ratios intended to accompany the total SWLMP:
+
+- Report a component only when required inputs are complete on the relevant LMP-valid support.
+- Otherwise blank the affected ratio and explain why.
+- Apply the same protection to annual and matched-period aggregates.
+- Any optional component-specific-support ratio must have a different name, denominator, and coverage report.
+
+Use statuses such as:
+
+- `INPUTS_COMPLETE`
+- `MISSING_COMPONENT_INPUTS`
+- `RECONCILIATION_EXCEPTION`
+- `NOT_PUBLISHED`
+
+Complete inputs do not imply independent validation.
+
+Cross-node energy differences may be investigated, but are not by themselves grounds to invalidate total reported LMP.
+
+## 13. Hub basis to SP15, NP15, and ZP26
+
+For each node and each hub:
+
+`basis_i,h,t = node_lmp_i,t − hub_lmp_h,t`
+
+Use matched timestamps where node price, hub price, and the node’s assigned zonal weight are valid.
+
+Calculate:
+
+`solar_weighted_basis_i,h = sum(basis_i,h,t × node_weight_hours_i,t) / sum(matched_pair_node_weight_hours_i,h)`
+
+The node’s assigned zonal profile must weight both sides of the comparison.
+
+Retain:
+
+- Matched hours.
+- Pairwise hour coverage.
+- Pairwise solar coverage.
+- Pairwise weighted numerator.
+- Pairwise weight denominator.
+- Matched-support node weighted price.
+- Matched-support hub weighted price.
+- Retained basis estimate.
+- Display-facing basis estimate.
+- Eligibility and reason.
+
+Verify:
+
+`matched_node_weighted_price − matched_hub_weighted_price = solar_weighted_basis`
+
+Do not subtract a node’s own-zone summary from a hub summary calculated using a different zone’s profile and call it matched basis.
+
+For standalone hub summaries:
+
+- NP15 uses NP15 production.
+- ZP26 uses ZP26 production.
+- SP15 uses SP15 production.
+
+Label standalone hub results separately from hub prices recalculated under a node’s profile for basis.
+
+Use the 90% pairwise solar-coverage threshold for display-facing basis, retaining calculable lower-coverage estimates separately.
+
+## 14. Monthly, annual, and matched-period results
+
+### Monthly
+
+Create a complete node-by-requested-month scaffold based on the historical node universe.
+
+Retain node-months with no observations and explain their status.
+
+Preserve additive sums and counts needed for:
+
+- LMP.
+- Solar coverage.
+- Hour coverage.
+- Components.
+- Negative exposure.
+- Each matched hub basis.
+
+Flag November 2026 as a partial requested month: November 1–18.
+
+Report requested days and calendar-month days separately.
+
+### Annual/YTD
+
+Derive from underlying additive sums or canonical hourly data.
+
+- Do not average monthly weighted prices.
+- Do not average monthly coverage percentages.
+- Do not calculate from blanked monthly display fields.
+- Include valid observations from low-coverage months.
+- Calculate annual eligibility independently.
+
+### Apples-to-apples comparison
+
+Include a separate January 1–November 18 comparison in each annual workbook.
+
+Keep full-year 2024/2025 and primary 2026 YTD results unchanged.
+
+Use a clearly labeled matched-period scenario.
+
+Explain that matching the cutoff reduces seasonal-window differences but does not eliminate differences from:
+
+- Leap day.
+- Node availability.
+- Missing prices.
+- Mapping uncertainty.
+
+Include a clearly labeled 2024 leap-day-excluded sensitivity using existing hourly data. Do not overwrite the primary calendar-window results.
+
+## 15. Required Excel workbooks and worksheets
+
+Create exactly three final `.xlsx` files in `output/`. Put supporting source, caches, intermediate data, manifests, and documentation in separate directories.
+
+Each workbook must include the following.
+
+### `README`
+
+Document:
+
+- Requested and observed coverage.
+- Market and interval.
+- Source extraction dates.
+- Zonal solar-profile construction.
+- Model configuration and units.
+- Formulas.
+- Time conventions.
+- Leap-day handling.
+- Missing-data rules.
+- Node-mapping methodology.
+- Coverage/display thresholds.
+- Component protections.
+- Worksheet guide.
+- Completion status.
+- Limitations.
+
+Describe weighted prices as project calculations from published CAISO prices under standardized modeled zonal solar assumptions.
+
+### `Solar_Profile`
+
+One row per expected pricing hour, including:
+
+- UTC interval start/end.
+- Pacific timestamp with offset.
+- Delivery date/hour.
+- NP15 output and weight.
+- ZP26 output and weight.
+- SP15 output and weight.
+- Weight-hours for each zone.
+- Scenario identifiers.
+- Leap-day mapping and repair flags.
+
+### `Solar_Profile_Config`
+
+Document:
+
+- Zone.
+- Modeled locations and coordinates.
+- Zonal-placement evidence.
+- Returned weather-grid/station.
+- Location weights.
+- PVWatts parameters.
+- Resource/dataset identifiers.
+- Time convention.
+- Profile checksums.
+- Modeling limitations.
+
+### `Node_Summary`
+
+One row per historical node, with:
+
+- Identity/classification.
+- Assigned zone and mapping status.
+- First/last observed prices.
+- Expected/valid hours.
+- Both coverage measures/statuses.
+- Retained and display-facing LMP.
+- Simple average.
+- Capture rate/status.
+- Component results/statuses.
+- Negative-price exposure.
+- Basis to all three hubs and pairwise coverage.
+- Reference/naming flags.
+- Availability/quality flags.
+- Relevant additive denominators.
+
+### `Monthly_Summary`
+
+One row per node-month with corresponding metrics and additive sums.
+
+If Excel limits require it, split into clearly indexed numbered sheets without losing rows.
+
+### `Matched_Period`
+
+January 1–November 18 results for the workbook’s year, with explicit period/scenario labels and identical coverage protections.
+
+Include or clearly index the leap-day-excluded sensitivity.
+
+### `Hub_Comparison`
+
+Hourly raw prices for all three hubs with all three zonal weights.
+
+Provide clearly separated annual/YTD, monthly, and matched-period hub summaries.
+
+Do not mix summary rows into the hourly table.
+
+### `Hourly_LMP_###`
+
+Full hourly total-LMP matrices:
+
+- Rows: every expected pricing timestamp.
+- Columns: node IDs.
+- Values: published raw LMP.
+- Missing values blank.
+- Include sufficient timestamp fields to distinguish repeated local hours.
+
+Include all nodes in the historical universe, even when an annual column is entirely blank. Explain those cases in the dictionary/QA.
+
+### `Hourly_Weighted_###`
+
+Matching node batches and timestamps.
+
+Values:
+
+`LMP × applicable node-zone weight_hours`
+
+Requirements:
+
+- Same node ordering as the corresponding raw matrix.
+- Valid zero-output observations produce zero.
+- Missing prices remain blank.
+- Unresolved-zone values remain blank.
+- Explain that these are numerators, not average weighted prices.
+
+### `Node_Dictionary`
+
+Include:
+
+- Exact identifiers/names.
+- Descriptions/classifications.
+- Historical availability.
+- Metadata-match status.
+- Zone assignments and evidence.
+- Effective dates where known.
+- Reference and name-based flags.
+- Direct published hub memberships, if available.
+- Raw/weighted sheet and column locations.
+
+### `QA_Validation`
+
+Include:
+
+- Expected/observed hours.
+- Node counts and mapping counts.
+- Nonmissing node-hour counts.
+- Missing intervals.
+- Exact/conflicting duplicates.
+- Join checks.
+- Source versions.
+- Download failures.
+- Component tests.
+- Formula reconciliations.
+- Readback results.
+- Completion status.
+
+Distinguish source completeness, processing correctness, mapping completeness, and display eligibility.
+
+### `Data_Issues`
+
+Include:
+
+- Issue ID/type.
+- Confirmed finding.
+- Affected scope.
+- Detection evidence.
+- Treatment.
+- Interpretation impact.
+- Resolution status.
+- Remaining hypothesis/follow-up.
+
+### Formatting
+
+- Flat tables.
+- Headers in row 1.
+- No merged cells.
+- Freeze panes and useful filters.
+- Units in column names.
+- ISO dates.
+- Consistent numeric formats.
+- IDs preserved as text where appropriate.
+- No macros or required external links.
+- Prevent source strings from becoming formulas.
+- Node-level tables start with `node_id`, then `node_name`.
+- Other table types use appropriate schemas.
+
+## 16. Excel scalability and performance
+
+Before full workbook export:
+
+1. Estimate nodes, cells, sheets, output size, memory, disk, and runtime.
+2. Test a representative matrix export.
+3. Select deterministic node batches.
+4. Confirm Excel limits and practical usability.
+
+Use efficient tools such as:
+
+- `requests` or `httpx`
+- `polars`, `pandas`, or `duckdb`
+- `pyarrow`/Parquet
+- `xlsxwriter` with appropriate memory-efficient writing
+
+Do not load the entire multi-year dataset into memory.
+
+Do not omit nodes or hours, round away material precision, or replace required matrices with external links to reduce size.
+
+Splitting into sheets does not necessarily make a huge workbook usable; measure actual behavior.
+
+If exactly three complete workbooks are infeasible within available limits, report the measured problem and request a specific change. Do not silently substitute samples, summary-only workbooks, or extra annual-part workbooks.
+
+## 17. Download reliability and failure handling
+
+Implement:
+
+- Verified API-compliant batching.
+- Rate limiting.
+- Controlled concurrency.
+- Retries with backoff and jitter.
+- ZIP integrity inspection.
+- Schema validation.
+- Error-payload detection.
+- Empty-response investigation.
+- Cache validation.
+- Resume from verified completed batches.
+- Overlap/duplicate detection.
+- Machine-readable failure manifests.
+
+Preserve publication/revision information.
+
+Distinguish:
+
+- Transport failure.
+- Source publication gap.
+- No published price.
+- Metadata gap.
+- Zone-mapping gap.
+- Conflicting source records.
+- Processing failure.
+
+Do not claim a cause without evidence.
+
+Real failures must produce meaningful structured status and nonzero process exits. Preserve diagnostic output rather than hiding errors through output filtering.
+
+Judge success using validated files, structured stage results, and manifests—not narrative assertions.
+
+## 18. Mandatory pilot tests
+
+Before full execution test:
+
+- An ordinary January day.
+- February 29, 2024.
+- Spring DST transition.
+- Fall DST transition.
+- A verified negative-price day.
+- All three hubs.
+- Several node classifications.
+- Nodes from all three mapped zones.
+- At least one unresolved mapping, if encountered.
+- A node with incomplete availability, if encountered.
+
+Compare sampled prices with separately issued official CAISO requests. Describe this as an independent retrieval check, not necessarily an independent underlying data source.
+
+Use separate synthetic unit-test fixtures for:
+
+- Exact duplicates.
+- Conflicting records.
+- Missing components.
+- Missing hub price.
+- Zero matched solar weight.
+- Negative prices.
+- Partial availability.
+- DST ambiguity.
+- Leap-day mapping.
+- Metadata join failure.
+- Conflicting/unresolved zone mapping.
+
+Synthetic fixtures must never enter deliverable prices.
+
+## 19. Mandatory calculation QA
+
+Verify:
+
+- Canonical keys are unique after documented revision handling.
+- Joins do not lose or multiply price records.
+- Every expected hour is represented.
+- Same-zone nodes use the same profile at each timestamp.
+- Different zonal profiles remain distinct where modeled output differs.
+- Identical nighttime weights are not treated as an error.
+- Every node uses its applicable assigned-zone profile.
+- Unresolved mappings receive no silent fallback.
+- Solar units are correct.
+- DST and leap-day mapping are correct for each profile.
+- Missing prices remain missing.
+- Negative prices and contributions remain.
+- Valid zero-output observations contribute zero.
+- Normalized solar shares sum to one when the denominator is positive.
+- Normalized price contributions sum to SWLMP.
+- Negative exposure lies within `[0,1]`.
+- Coverage lies within `[0,100]`, subject to numerical tolerance.
+- Matched weight does not exceed full-period weight.
+- Matched basis identities reconcile.
+- Missing components are not treated as zero.
+- Component checks use verified definitions.
+- Annual/matched-period results reconcile.
+- Heatmap rules hold.
+- Reference rows are distinguishable.
+- 2026 stops at the requested delivery date.
+
+Do not use assumed solar-peak timing or price-trough timing as conclusive proof of correctness. Timing shapes may be diagnostic, but documented timestamp alignment is the primary test.
+
+Do not automatically reject extreme published prices. Preserve, flag, and verify them.
+
+## 20. Written-workbook readback
+
+Reopen the actual completed files without rebuilding them.
+
+Verify:
+
+- Required sheets and headers.
+- Unique summary keys.
+- Expected row/column counts.
+- Matching raw/weighted matrix layouts.
+- Dictionary locations.
+- Sample raw values against canonical data.
+- Sample weighted values against formulas and correct zone profile.
+- Eligible rows have values and sufficient solar coverage.
+- Ineligible display fields are blank.
+- Retained low-coverage estimates remain available.
+- Unmapped nodes remain represented without invented weighted estimates.
+- All requested nodes and hours are represented.
+- Workbooks are valid, readable archives.
+- No unintended external links exist.
+
+Report which checks are exhaustive and which are sampled. Do not claim exhaustive data validation from sample checks.
+
+## 21. Documentation and lessons learned
+
+Create supporting files outside the final-workbook directory:
+
+- Reusable Python source.
+- Dependency file.
+- Configuration example without secrets.
+- Execution/refresh instructions.
+- Machine-readable manifests.
+- `DATA_CLEANING_AND_LESSONS.md`.
+
+The lessons document must explain:
+
+1. Actual issues encountered.
+2. Detection methods.
+3. Affected scope.
+4. Corrections/protections.
+5. Remaining caveats.
+6. Resolved versus unresolved status.
+7. Future preflight, export, processing, and delivery checklists.
+8. Prioritized setup improvements.
+
+Cover relevant findings involving:
+
+- API/report definitions.
+- Source grain.
+- Duplicates/revisions.
+- Time alignment.
+- Missing prices.
+- Zone mapping.
+- Solar-model construction.
+- Components.
+- Join behavior.
+- Node availability.
+- Download resumability.
+- Workbook scalability.
+
+Do not invent problems to populate the document.
+
+Distinguish confirmed source defects, implementation bugs, methodological choices, and execution constraints. Cite local evidence paths or code sections.
+
+Explain that:
+
+- Within-zone comparisons use common weights.
+- Cross-zone results reflect both prices and different zonal production shapes.
+- Fixed TMY assumptions do not represent actual-year weather.
+- Mapping uncertainty differs from missing-price coverage.
+- Complete component inputs do not automatically mean the component split is independently validated.
+
+## 22. Completion and final handoff
+
+Successful completion requires:
+
+- All obtainable requested hourly DAM data retrieved.
+- Exact unavailable intervals disclosed.
+- Historical nodes retained.
+- Three reproducible zonal solar profiles.
+- Auditable zone mapping and unresolved-node reporting.
+- Required raw and weighted matrices.
+- Annual/YTD, monthly, matched-period, and three-hub basis results.
+- Coverage/display/component protections.
+- Exactly three final annual workbooks.
+- Successful readback.
+- Reproducible source and provenance.
+- Clear caveats and issue register.
+
+Use explicit statuses such as:
+
+- `COMPLETE`
+- `COMPLETE_WITH_DOCUMENTED_SOURCE_GAPS`
+- `INCOMPLETE_BLOCKED`
+- `VALIDATION_FAILED`
+
+Report mapping completeness separately. A completed download does not establish a completed zonal analysis.
+
+At completion report:
+
+- Three workbook paths.
+- Requested and observed periods.
+- Node counts by classification.
+- Direct, inferred, conflicting, unresolved, and out-of-scope mapping counts.
+- Expected hours and nonmissing node-hour records.
+- Heatmap, low-coverage, no-estimate, unmapped, and reference counts.
+- Workbook sizes and worksheet counts.
+- Verification results.
+- Download/retry/resume summary.
+- Source extraction dates.
+- Remaining limitations.
+- Locations of code, configuration, manifests, and lessons documentation.
+
+Start by testing official data access, confirming solar-model access, and assessing node-to-zone mapping feasibility. Then execute the complete workflow. Do not stop at a prototype or represent incomplete execution as completed datasets.
