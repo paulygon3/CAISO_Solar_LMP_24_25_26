@@ -15,6 +15,7 @@ REFERENCE = {
     "ATL_PNODE_MAP": (1, {"pnode_id": "ALL"}, {"APNODE_ID", "PNODE_ID"}),
     "ATL_PNODE": (1, {"pnode_id": "ALL", "pnode_type": "ALL"}, {"PNODE_ID"}),
     "ATL_APNODE": (1, {"apnode_id": "ALL", "apnode_type": "ALL"}, {"APNODE_ID"}),
+    "ATL_TAC_AREA_MAP": (1, {}, {"PNODE_ID"}),
     "ATL_HUB": (1, {}, {"APNODE_ID"}),
 }
 PRICE_COLS = {"NODE", "NODE_ID", "MW", "INTERVALSTARTTIME_GMT", "INTERVALENDTIME_GMT", "OPR_DT", "OPR_HR", "MARKET_RUN_ID", "LMP_TYPE"}
