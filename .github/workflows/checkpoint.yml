@@ -1,0 +1,28 @@
+name: Validate and publish the resume checkpoint
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/checkpoint.yml']
+permissions:
+  contents: write
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: checkpoint-transfer
+      - name: Validate and attach the checkpoint
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          echo 'ecfae841bbc61a54779c2eb6988d3459b0429e2035b06477d330181ae120e92d  CAISO_resume.zip' | sha256sum -c
+          unzip -tq CAISO_resume.zip
+          if ! gh release view checkpoint-v1 >/dev/null 2>&1; then
+            gh release create checkpoint-v1 --target main --title 'Verified CAISO resume checkpoint' --notes 'Six all-location pilot days, full three-hub history, and validated zonal solar profiles.'
+          fi
+          if ! gh release view checkpoint-v1 --json assets --jq '.assets[].name' | grep -Fxq CAISO_resume.zip; then
+            gh release upload checkpoint-v1 CAISO_resume.zip
+          fi
