@@ -10,18 +10,33 @@ from common import C,CONFIG_HASH,ROOT,save_json,sha,utcnow
 
 SUPPORT=ROOT/"staging/support"
 def diagnostics():
-    results={}
+    results={};exceptions=[]
     paths=sorted(SUPPORT.glob("retrieval/**/*.jsonl"))
     named=ROOT/"staging/inventory/named-retrieval-events.jsonl"
     if named.exists():paths.append(named)
     for path in paths:
-        attempts=Counter();errors=Counter()
+        attempts=Counter();errors=Counter();events=[]
         with path.open() as f:
             for line in f:
                 if not line.strip():continue
-                r=json.loads(line);attempts[(r.get("stage",""),r.get("status",""))]+=1
+                r=json.loads(line);events.append(r);attempts[(r.get("stage",""),r.get("status",""))]+=1
                 if r.get("status")=="FAILED":errors[r.get("key","unspecified")]+=1
+        success={r.get("key") for r in events if r.get("stage")=="retrieve" and r.get("status") in ("OK","CACHED")}
+        for event in events:
+            if event.get("status")!="FAILED":continue
+            q=event.get("params",{});a=q.get("startdatetime");b=q.get("enddatetime")
+            if not a or not b:continue
+            lo=pd.to_datetime(a,format="%Y%m%dT%H:%M-0000",utc=True);hi=pd.to_datetime(b,format="%Y%m%dT%H:%M-0000",utc=True)
+            local=lo.tz_convert(C["timezone"]);end=hi.tz_convert(C["timezone"]);hours=(hi-lo).total_seconds()/3600
+            month_start=local.normalize().replace(day=1);month_end=month_start+pd.offsets.MonthBegin(1)
+            exceptions.append(dict(dataset=q.get("queryname"),requested_nodes=q.get("node",q.get("grp_type","report scope")),category="RETRIEVAL_FAILURE",
+                utc_start=lo.isoformat(),utc_end_exclusive=hi.isoformat(),pacific_start=local.isoformat(),pacific_end_exclusive=end.isoformat(),
+                requested_span_hours=hours,month=local.strftime("%Y-%m"),fraction_of_calendar_month=hours/((month_end-month_start).total_seconds()/3600),
+                source_key=event.get("key"),attempt=event.get("attempt"),seen_success_in_same_log=event.get("key") in success,
+                error=event.get("error","UNKNOWN"),action="Retry and validate source archive; consult final daily receipt",source_log=str(path.relative_to(ROOT/"staging"))))
         results[str(path.relative_to(ROOT/"staging"))]={"stage_status_counts":{"/".join(k):v for k,v in attempts.items()},"failed_attempts_by_key":dict(errors)}
+    support_cols=["dataset","requested_nodes","category","utc_start","utc_end_exclusive","pacific_start","pacific_end_exclusive","requested_span_hours","month","fraction_of_calendar_month","source_key","attempt","seen_success_in_same_log","error","action","source_log"]
+    pd.DataFrame(exceptions,columns=support_cols).to_csv(SUPPORT/"source_access_exceptions.csv",index=False)
     save_json(SUPPORT/"retrieval-summary.json",results)
     return results
 
