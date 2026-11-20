@@ -60,8 +60,8 @@ def run(inventory,first,end,dest):
                 p=pd.read_parquet(ROOT/"canonical"/f"{d}.parquet",filters=[("node_id","in",list(select))])
                 base.append(p)
             base=pd.concat(base,ignore_index=True).set_index(["node_id","utc_start"]).sort_index()
-            for j in range(0,len(nodes),10):
-                ids=list(dict.fromkeys([ANCHOR,*nodes[j:j+10]]))
+            for j in range(0,len(nodes),7):
+                ids=list(dict.fromkeys([ANCHOR,*nodes[j:j+7]]))
                 path=query(lo,C["report"],nodes=ids,end=hi);mf=ROOT/"manifests"/(path.stem+".json")
                 raw=named_data(path,lo,hi,ids)
                 old=base.reindex(raw.index)

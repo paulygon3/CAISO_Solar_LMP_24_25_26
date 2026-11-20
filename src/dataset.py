@@ -41,8 +41,8 @@ def restore_month(month):
         for registry,label in [(month+"-manifest.json",month+"-analysis.zip"),(month+"-zones.json",month+"-zones.zip")]:
             m=json.loads(get_asset(TAG,registry,tmp).read_text())
             if m["config_sha256"]!=CONFIG_HASH:raise ValueError("incompatible config for "+month)
-            info=next(a for a in m["assets"] if a["name"]==label) if "assets" in m else m["asset"]
-            packed=get_asset(TAG,label,tmp)
+            info=next(a for a in m["assets"] if a["name"]==label or a.get("kind")=="analysis") if "assets" in m else m["asset"]
+            packed=get_asset(TAG,info["name"],tmp)
             if packed.stat().st_size!=info["bytes"] or sha(packed)!=info["sha256"]:raise ValueError("bad input asset "+label)
             with zipfile.ZipFile(packed) as z:
                 for n in z.namelist():

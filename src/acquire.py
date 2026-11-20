@@ -61,6 +61,18 @@ def release_inventory(tag):
         result[name]={"name":name,"size":int(size),"id":int(asset_id)}
     return result
 
+def name_recovered_batch(tag,path,info,existing):
+    """Keep a partial prior upload immutable if a fresh OASIS retrieval yields different ZIP bytes."""
+    if path.name not in existing:return path
+    with tempfile.TemporaryDirectory(dir=path.parent) as d:
+        gh("release","download",tag,"-p",path.name,"-D",d)
+        if sha(Path(d)/path.name)==info["sha256"]:return path
+    distinct=path.with_name(path.stem+"-"+info["sha256"][:16]+path.suffix)
+    path.replace(distinct)
+    info["prior_partial_upload"]=path.name
+    info["name"]=distinct.name
+    return distinct
+
 def upload(tag,files):
     assets=release_inventory(tag)
     for p in files:
@@ -105,6 +117,10 @@ def run():
         prices=collection/(month+"-oasis.zip")
         data=collection/(month+"-analysis.zip")
         parts=[package(prices,raw),package(data,refs+mfiles+daily+diagnostics+quarantine)]
+        parts[0]["kind"]="raw";parts[1]["kind"]="analysis"
+        if a.release:
+            prices=name_recovered_batch(a.release,prices,parts[0],inventory)
+            data=name_recovered_batch(a.release,data,parts[1],inventory)
         save_json(stamp,dict(month=month,start=str(start),end_exclusive=str(end),config_sha256=CONFIG_HASH,
             packaged_utc=utcnow(),daily_archives=len(raw),assets=parts))
         if a.release:
