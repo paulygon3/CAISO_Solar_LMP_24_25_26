@@ -1,0 +1,124 @@
+name: Build and validate annual CAISO workbooks
+on:
+  workflow_run:
+    workflows: ['Acquire official CAISO market inputs']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      integration_only:
+        type: boolean
+        default: false
+        description: 'Run the two-day real-data exporter and readback check'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: caiso-workbooks-${{ inputs.integration_only || 'production' }}
+  cancel-in-progress: false
+env:
+  OPENBLAS_NUM_THREADS: '1'
+  OMP_NUM_THREADS: '1'
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  preflight:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - name: Verify official source access through checksummed published inputs
+        if: inputs.integration_only
+        run: |
+          PYTHONPATH=src python -c 'from dataset import restore_month; restore_month("2024-01")'
+          python -u src/pipeline.py integration
+      - uses: actions/upload-artifact@v4
+        if: inputs.integration_only
+        with:
+          name: two-day-integration-readback
+          path: staging/integration-test/support/readback.json
+  inventory:
+    if: ${{ !inputs.integration_only }}
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -r requirements.txt
+      - run: python -u src/pipeline.py restore
+      - run: python -u src/pipeline.py inventory
+      - uses: actions/upload-artifact@v4
+        with:
+          name: historical-node-inventory
+          path: staging/inventory/
+          retention-days: 14
+  annual:
+    needs: inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        year: [2024, 2025, 2026]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: historical-node-inventory
+          path: staging/inventory
+      - run: python -u src/pipeline.py restore --year ${{ matrix.year }}
+      - run: python -u src/pipeline.py build --year ${{ matrix.year }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: validated-workbook-${{ matrix.year }}
+          path: output/*.xlsx
+          compression-level: 0
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: annual-evidence-${{ matrix.year }}
+          path: staging/support/${{ matrix.year }}/
+          compression-level: 1
+          retention-days: 14
+  publish:
+    needs: annual
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: validated-workbook-*
+          path: output
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: annual-evidence-*
+          path: staging/evidence
+      - uses: actions/download-artifact@v4
+        with:
+          name: historical-node-inventory
+          path: staging/inventory
+      - name: Collect annual evidence and acquisition logs
+        run: |
+          mkdir -p staging/support/retrieval
+          for year in 2024 2025 2026; do mv "staging/evidence/annual-evidence-$year" "staging/support/$year"; done
+          for workflow in acquire.yml reference.yml; do
+            gh run list --workflow "$workflow" --status completed --limit 100 --json databaseId --jq '.[].databaseId' > "$RUNNER_TEMP/source-runs"
+            while read -r id; do
+              gh run download "$id" -D "staging/support/retrieval/$id" || echo "Source run $id has no downloadable diagnostic artifact"
+            done < "$RUNNER_TEMP/source-runs"
+          done
+      - run: python -u src/pipeline.py documentation
+      - name: Release the three validated files and machine-readable evidence
+        run: python -u src/publish.py

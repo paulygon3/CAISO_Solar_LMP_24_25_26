@@ -1,0 +1,1011 @@
+{
+  "archives": [
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240129T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240101T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:24.912649+00:00",
+      "sha256": "8e11014ea91b176d20c974cda2e0043099daf041cfd9443923d512d5dde4b6be",
+      "size": 97564
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240201T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240129T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:26.573734+00:00",
+      "sha256": "2a78e3d884d5d2b0d762922173aeb878d4511c48ce35edd16c85ba5585cbb37e",
+      "size": 10683
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240229T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240201T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:38.049652+00:00",
+      "sha256": "101a3156af5ee0c33b4de6d670e89f381627ac2e8d7c369f9aef93976d0fc78f",
+      "size": 97035
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240301T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240229T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:36:36.576905+00:00",
+      "sha256": "29c14b6a6eb17eb6e8d3fde1907ea59dd4f49208aab8f7a4709ca77e5fd5bb2e",
+      "size": 3807
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240329T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240301T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:45.444364+00:00",
+      "sha256": "f79a569f48feacf90c7c6f85f538ebbdf499dd016891f9dad395a1ca4b1ffa84",
+      "size": 97062
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240401T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240329T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:46.552470+00:00",
+      "sha256": "456d9d2038176692baba994a12daa6462b922d81078e22f91fd64a3c91cef1a0",
+      "size": 10803
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240429T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240401T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:58.057300+00:00",
+      "sha256": "62e94e922ff474c30ab5012636516ba49e42164223e1ac96b464516edff01990",
+      "size": 97961
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240501T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240429T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:40:58.798363+00:00",
+      "sha256": "83e10b8dc891512a8d402287952f0200383fed415a6655d41213497a35cc6c11",
+      "size": 7353
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240529T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240501T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:10.667788+00:00",
+      "sha256": "1ec59f20dc30fab5d2872e852ae64135a07c854ad101fc92f232cd534c9ac55c",
+      "size": 98082
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240601T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240529T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:11.825278+00:00",
+      "sha256": "0383688f4c498f9a5529348668c5aa09d8a213667e0f9068ba43cf774e16c183",
+      "size": 10814
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240629T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240601T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:24.237819+00:00",
+      "sha256": "a075c4ec2132b2d6c1a9e34c423a758e3489855e6a48675c236bf8af1d3f0a3a",
+      "size": 98031
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240701T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240629T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:25.263053+00:00",
+      "sha256": "e9c966e209870b2772a6b3c7d278e8ea684c34e0918caffc96ba9ebaad8214ce",
+      "size": 7348
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240729T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240701T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:37.193286+00:00",
+      "sha256": "8d0c3ffd2281cadca5a67fa6ac788fd0347a8922e6b834376c2f03449c602052",
+      "size": 98490
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240801T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240729T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:38.307896+00:00",
+      "sha256": "c920e88060983de8b3f8ce968c4c84e1dce0f4fe5c06a9e0cbd72b4a83073637",
+      "size": 10749
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240829T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240801T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:50.846915+00:00",
+      "sha256": "6a8085f356047fbc784232c120d015a07e3381987bc983e5b8bd235784bde6ec",
+      "size": 96668
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240901T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240829T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:41:51.926176+00:00",
+      "sha256": "5bac632b09cc6d74825ab5bfdac52d6150173a02c32481b0087ff6a0d35356a7",
+      "size": 10715
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20240929T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240901T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:04.081250+00:00",
+      "sha256": "01efb9226f07c255f10009dd5b9a95e3cbe6a92b5537e922e349eb2e07e075a2",
+      "size": 96621
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20241001T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20240929T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:05.133676+00:00",
+      "sha256": "a356f2d68b042cc3e00f04cdf8907780fa2a925118d0f75a72aab342dd2a8135",
+      "size": 7315
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20241029T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20241001T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:18.085371+00:00",
+      "sha256": "8afdb2f5c775bc057970cd9db69455ca8c413b96b4635500d83c8817125b40fb",
+      "size": 98018
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20241101T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20241029T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:19.141674+00:00",
+      "sha256": "7acbc3f6ae14859a0afc5627f0119991aef775a04be00c70279a91342deb2024",
+      "size": 10891
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20241129T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20241101T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:29.449656+00:00",
+      "sha256": "76b97d40618d1c2edecdf9e0335fa1e8530ebb74c1823f21c8ee912ac2a1a0ef",
+      "size": 95765
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20241201T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20241129T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:30.936560+00:00",
+      "sha256": "38356ccf6cb34313b6b707b8b8e5b358944a0e4bfb11443fab6d5b84f42f4a18",
+      "size": 7289
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20241229T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20241201T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:40.620727+00:00",
+      "sha256": "480f2e5dcfcd2ed3ce8fe46a4cf1e54484f90050f5a0e92bba4dbd3dbb468fb7",
+      "size": 95927
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250101T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20241229T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:43.010573+00:00",
+      "sha256": "af4136188f7b7d55f5886bf00c799cae749a4fbf1b0ffad7f4c50edf0f356fc2",
+      "size": 10568
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250129T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250101T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:52.582323+00:00",
+      "sha256": "8922b193ce4f9bb0f031c166bf3389220e77f34dea498f802cda59c16a705dff",
+      "size": 97488
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250201T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250129T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:42:55.118753+00:00",
+      "sha256": "edc3eafcedcdf18cacce753141859a7c1790d5179cefbba7d98ad8164d5a3324",
+      "size": 10737
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250301T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250201T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:03.058579+00:00",
+      "sha256": "d6ba8ad90be251d10b2b761c2a7277a75e190a5be511706b71616835ffe6620a",
+      "size": 98354
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250329T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250301T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:12.534483+00:00",
+      "sha256": "270077029c1fbdf68bd0e0d60fd2d5d10aa1e5832b53a793880b85e265300ad4",
+      "size": 98238
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250401T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250329T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:13.463140+00:00",
+      "sha256": "7fdeb52fe8997671262edbda479b747a1e7d54d28ac2cbf871d7043984d91055",
+      "size": 10647
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250429T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250401T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:25.231921+00:00",
+      "sha256": "29e21f9f3b21ec2b065f7cb53a38bfa9527789ffad2e2b8ee8abe616f77aeaf8",
+      "size": 98058
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250501T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250429T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:25.987517+00:00",
+      "sha256": "91ce253b4bba62b39c0e983a6b4a98b18180d162378fc5624e65b877c17d7227",
+      "size": 7350
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250529T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250501T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:38.454344+00:00",
+      "sha256": "f4e25f36e81ef5739ee2b9469ecad6add702439ce8cd8650a9b26f6c0f0de552",
+      "size": 97209
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250601T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250529T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:39.428102+00:00",
+      "sha256": "7ad52c1255d810dc50911e96f1cc1b565e01ccf7922c9cb51f3724bf2c4a1e3f",
+      "size": 10867
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250629T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250601T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:51.470541+00:00",
+      "sha256": "4f9e4ff2aad74bcf84daf3fd2febc0f15712b9fb88876a59af7b5d390ec50fa9",
+      "size": 97811
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250701T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250629T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:43:52.351574+00:00",
+      "sha256": "c470da5d960e5682325e4268d04e9acf5240f567508ac816faa99a44fdf8e757",
+      "size": 7445
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250729T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250701T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:04.664392+00:00",
+      "sha256": "3de01a362386e4f6a5a41bb1dfb6738d777b1115af11d95302151b71e36f585b",
+      "size": 98018
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250801T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250729T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:05.845340+00:00",
+      "sha256": "02b17161a743ade9dd2e08c30e48af98c7321902d07280df4377ee74cd1a5c44",
+      "size": 10898
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250829T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250801T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:17.482493+00:00",
+      "sha256": "550d8ecee70dca7e90a9b693300d1446423ddbfe3fde7fc84c7d633f9d1b44ff",
+      "size": 96850
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250901T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250829T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:18.567263+00:00",
+      "sha256": "ee723e33f5e50fbd55aedcb3c81198f76e32da40a8f54bebb34e248e369902f7",
+      "size": 10916
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20250929T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250901T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:30.775254+00:00",
+      "sha256": "6cbf2ecf85822f5b416143c7a1cc1e2ecce84cc796d533f9858e4fa3dfd9443b",
+      "size": 97516
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20251001T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20250929T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:31.779490+00:00",
+      "sha256": "d18247a4ef95a192ed5c0fdcb0002bcdd8a06500fccd316ee57466fde7e5fe7e",
+      "size": 7334
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20251029T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20251001T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:44.450112+00:00",
+      "sha256": "45754d267960c2bddf8ab0cf801b541eb0a0a0719a4b3e73710adfeeeec01b1c",
+      "size": 97746
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20251101T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20251029T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:45.441196+00:00",
+      "sha256": "b635658d911374c3bf5341db33e691c80397730169059c19210fca09c66f7001",
+      "size": 10732
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20251129T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20251101T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:57.577795+00:00",
+      "sha256": "41d64d356762a272a767ae709b2a091c80c7ef340a89d06b8d5c0bb9696ed601",
+      "size": 96933
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20251201T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20251129T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:44:58.269735+00:00",
+      "sha256": "8fa9778d5e89faa9a13836305db336ed0dbd09f4deb3d82b20d96bdd749121e8",
+      "size": 7322
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20251229T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20251201T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:12.375608+00:00",
+      "sha256": "394721c5d5534795359d33a218d3127daea45edd72b1c7594748ec296434c55e",
+      "size": 96620
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260101T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20251229T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:13.530816+00:00",
+      "sha256": "789ce0e935b5f12f2e5aff427995975eab553e4ca8b9516682f789a99092f2c9",
+      "size": 10717
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260129T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260101T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:26.241739+00:00",
+      "sha256": "12370462ed166243afb2770823264f7884173f634dbc9843c6c67b6de2d1cf08",
+      "size": 96639
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260201T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260129T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:27.289094+00:00",
+      "sha256": "76646c3c636ac176b4d6715a22968668888a3f8599b64fdf1669a6345e33cb6a",
+      "size": 10728
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260301T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260201T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:39.924315+00:00",
+      "sha256": "dba5c4262d6d11859a4c14f2326c5a4b3c5af4f1f4f93e509d8160a445041a17",
+      "size": 96186
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260329T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260301T08:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:47.465287+00:00",
+      "sha256": "3db9403eed269224caaf935a2c597c1a20c11cb20a84c450066ae931458a3e49",
+      "size": 96537
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260401T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260329T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:45:48.570860+00:00",
+      "sha256": "911267ce0eee9651f57e84f954456d918fde1231ec8adf10da91ac770ca158db",
+      "size": 10562
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260429T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260401T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:00.458312+00:00",
+      "sha256": "514f0dfb0a843df1d063a974f0f6ec72847d37be7b15632d64777cd568b75e4e",
+      "size": 96611
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260501T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260429T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:01.267767+00:00",
+      "sha256": "87f5a72e2a96f62ca46797b1f64ec69eebf189cbcc6de3c47c3d0b1358433f5c",
+      "size": 7270
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260529T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260501T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:11.869068+00:00",
+      "sha256": "400b0aaffd56c5b0b8bfc855e7d4c734d5f71cb623f2a3c778991af0a96ab6c9",
+      "size": 99844
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260601T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260529T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:13.189337+00:00",
+      "sha256": "fca79a3a7c008d26b94bf6dd4dd89e48cbba585b09008315e2cf56a54a4f3583",
+      "size": 10895
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260629T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260601T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:22.602584+00:00",
+      "sha256": "f88ac0b5562ebfd0478cb85bccd743f44e0319347f1fc9e6717a865c90c9f689",
+      "size": 101504
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260701T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260629T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:25.019468+00:00",
+      "sha256": "b04fc82e8b285b692dc39e85159758d5530632cc9e452c3f219a9edee11d770e",
+      "size": 7766
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260729T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260701T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:34.752895+00:00",
+      "sha256": "d86ddb1e21f1b721887e0add37bbf00cbca332c70e77867fda94d0a22419b618",
+      "size": 104688
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260801T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260729T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:37.079000+00:00",
+      "sha256": "8f64d23838435773ba084606010b0d117fdc3f591d8629d1a49447283e3d5819",
+      "size": 11473
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260829T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260801T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:46.506141+00:00",
+      "sha256": "50d5e58c935cea9827f1e2dd0e92551d518757533bc470eb208d0ea36701648d",
+      "size": 104548
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260901T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260829T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:49.244195+00:00",
+      "sha256": "324613f002ab2624e497d5eefa82d98ccf0205cfce51adfde77c41eeb06caebb",
+      "size": 11340
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20260929T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260901T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:46:58.830137+00:00",
+      "sha256": "219cd263c1a318b8f7796b7a7f168803f154b8a42bfe42c15ede0b5fa2fcf4f5",
+      "size": 103072
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20261001T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20260929T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:47:01.262661+00:00",
+      "sha256": "0dd7b4b2f878a6bfaf8d647a401ad5c4cbea7062da9a3860ec2af2d9d6e866f3",
+      "size": 7813
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20261029T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20261001T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:47:10.605968+00:00",
+      "sha256": "f83b3f91fd5aec4454bed9d291e6211e14eddb516736773d1f1bbb8646d6022f",
+      "size": 105056
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20261101T07:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20261029T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:47:12.997495+00:00",
+      "sha256": "23f0981293d3f733dbc37c4f3a3b43a95418bdb4cc2e9f5f5352e148e3257df9",
+      "size": 10866
+    },
+    {
+      "endpoint": "https://oasis.caiso.com/oasisapi/SingleZip",
+      "params": {
+        "enddatetime": "20261119T08:00-0000",
+        "market_run_id": "DAM",
+        "node": "TH_NP15_GEN-APND,TH_ZP26_GEN-APND,TH_SP15_GEN-APND",
+        "queryname": "PRC_LMP",
+        "resultformat": 6,
+        "startdatetime": "20261101T07:00-0000",
+        "version": 12
+      },
+      "retrieved": "2026-11-20T02:47:20.689388+00:00",
+      "sha256": "a7aae333b05130861ab208b0feaf882dd359d72bdb94f0da026bec8a2d37d8d9",
+      "size": 64400
+    }
+  ],
+  "duplicate_rows": 0,
+  "sha256": "28288d2f2cc4abbb7b23086063aca6166bf2d94c4089af63a9a2cd33806eac25"
+}

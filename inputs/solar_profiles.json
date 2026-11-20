@@ -1,0 +1,20 @@
+{
+  "2024": {
+    "hours": 8784,
+    "leap_synthetic": 24,
+    "repair_hours": 0,
+    "sha256": "771358534a02726abd24923403f6156698226835d88e576b2e6a5cce870e80fb"
+  },
+  "2025": {
+    "hours": 8760,
+    "leap_synthetic": 0,
+    "repair_hours": 0,
+    "sha256": "90035396edbafe7d28072bafaaef1c67ba8edf60ec904a57374b441e82dc2bbb"
+  },
+  "2026": {
+    "hours": 7728,
+    "leap_synthetic": 0,
+    "repair_hours": 0,
+    "sha256": "dfd81903f3b4b335cacdd462dc4fbefbffd1561a0c1d67f11f58fd010dd8c97d"
+  }
+}
