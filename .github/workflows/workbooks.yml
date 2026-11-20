@@ -114,9 +114,10 @@ jobs:
           mkdir -p staging/support/retrieval
           for year in 2024 2025 2026; do mv "staging/evidence/annual-evidence-$year" "staging/support/$year"; done
           for workflow in acquire.yml reference.yml; do
+            if [ "$workflow" = acquire.yml ]; then pattern='acquisition-diagnostics-*'; else pattern='historical-reference-log-*'; fi
             gh run list --workflow "$workflow" --status completed --limit 100 --json databaseId --jq '.[].databaseId' > "$RUNNER_TEMP/source-runs"
             while read -r id; do
-              gh run download "$id" -D "staging/support/retrieval/$id" || echo "Source run $id has no downloadable diagnostic artifact"
+              gh run download "$id" --pattern "$pattern" -D "staging/support/retrieval/$id" || echo "Source run $id has no downloadable diagnostic artifact"
             done < "$RUNNER_TEMP/source-runs"
           done
       - run: python -u src/pipeline.py documentation
