@@ -204,7 +204,18 @@ def build_tables(inv,index,stage,months,test=False):
         for b in sorted({inv.index.get_loc(node)//BATCH for node in C["basis_hubs"].values()}):
             df=pd.read_parquet(stage/"summary"/f"{period}_{b:03d}.parquet")
             hubsumm.append(df[df.reference_flag])
-    sheets.extend([frame_sheet("Hub_Period_Summary",pd.concat(hubsumm,ignore_index=True)),
+    hub_periods=pd.concat(hubsumm,ignore_index=True)
+    if not test:
+        independent=pd.read_csv(ROOT/"results/verified_hub_periods.csv")
+        independent=independent[independent.year.eq(year)].set_index(["period","node_id"]).sort_index()
+        actual=hub_periods.set_index(["period","node_id"]).sort_index()
+        if not independent.index.equals(actual.index):raise ValueError("independent reference-period scaffold")
+        comparison=["expected_hours","valid_price_hours","weighted_numerator","matched_weight_hours","solar_weighted_lmp_usd_per_mwh",
+                    "negative_price_solar_share","solar_coverage_pct","time_weighted_lmp_usd_per_mwh"]+[z+"_basis_usd_per_mwh" for z in ZONES]
+        if not np.allclose(independent[comparison],actual[comparison],equal_nan=True,rtol=1e-10,atol=1e-8):
+            raise ValueError("official named-hub scalar and all-location vectorized period results disagree")
+        qa_df.loc[len(qa_df)]=["Independent hub period metrics",len(comparison)*len(actual),"All named-hub period rows checked against separate retrieval, scalar calculation and calendar masks"]
+    sheets.extend([frame_sheet("Hub_Period_Summary",hub_periods),
                    frame_sheet("Node_Dictionary",dictionary),frame_sheet("Node_Zone_History",history),
                    frame_sheet("Daily_Source_QA",daily),frame_sheet("Data_Issues",issues_df),frame_sheet("QA_Validation",qa_df)])
     for i in range(0,n,BATCH):
