@@ -6,6 +6,22 @@ This repository calculates day-ahead solar-weighted prices and node-to-hub basis
 
 The report compares hub prices, solar capture rates, negative-price exposure and the same 5,332 pricing locations across three years. To regenerate the tables, download the release’s `CAISO_provenance.zip`, install the repository requirements and run `python src/key_metrics_report.py /path/to/CAISO_provenance.zip`.
 
+## Find the zone for a pricing node
+
+[Download the annual node-to-zone lookup (CSV)](https://raw.githubusercontent.com/paulygon3/CAISO_Solar_LMP_24_25_26/main/results/node_zones_by_year.csv) · [Download dated assignments and evidence (CSV)](https://raw.githubusercontent.com/paulygon3/CAISO_Solar_LMP_24_25_26/main/results/node_zone_history.csv)
+
+Search the annual lookup for the exact `node_id`. It covers all 20,048 historical pricing IDs, including aggregate locations. Each reporting year has a zone and an evidence status. The 2026 window ends November 18. For a particular delivery hour, filter the dated file by the same ID and select the interval containing that hour. The start is inclusive and the end is exclusive, both in UTC.
+
+| Status | What it means |
+| --- | --- |
+| DIRECT | The exact node appears in a dated CAISO trading-hub membership record, or the ID is the named reference hub itself. |
+| INFERRED | Two internal CAISO ancillary-service regions place the node on the corresponding sides of Paths 15 and 26, or all nonzero load-distribution members of an aggregate resolve to one zone and the distribution factors account for the aggregate. |
+| CONFLICTING | The evidence disagrees. The lookup leaves the zone blank. |
+| UNRESOLVED | The study lacks sufficient evidence for part or all of the interval being summarized. The dated file can still contain supported intervals for an unresolved year. |
+| OUTSIDE_THREE_ZONE_SCOPE | A dated record places the node in another published trading hub. |
+
+Use DIRECT for confirmed hub membership. Use the dated assignments for a year marked VARIES. CAISO publishes trading-hub membership for a subset of pricing nodes. The study's inferred zones extend coverage for regional comparisons. Their accuracy has no independently measured percentage. Download the three released workbooks into `output/` and run `python src/node_zone_lookup.py` to reproduce both lookups. [CAISO membership file for May 2026 (ZIP)](https://oasis.caiso.com/oasisapi/SingleZip?queryname=ATL_PNODE_MAP&version=1&pnode_id=ALL&resultformat=6&startdatetime=20260501T07:00-0000&enddatetime=20260529T07:00-0000) · [Mapping rules and source limitations](DATA_CLEANING_AND_LESSONS.md)
+
 ## Download the workbooks
 
 The completed release covers 25,272 Pacific delivery hours and 389,180,920 published prices. All three files passed written-workbook validation. Each download is a self-contained Excel file with 93 worksheets and the same 20,048 pricing locations.
