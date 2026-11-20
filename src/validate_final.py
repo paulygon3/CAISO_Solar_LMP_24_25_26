@@ -46,7 +46,8 @@ def source_samples(index,inventory):
         require(sha(path)==record["sha256"],"canonical sample digest "+str(d))
         positions=[i for i in sorted(selected) if local[i].date()==d]
         times=index[positions]
-        df=pd.read_parquet(path,columns=["utc_start","node_id","LMP"])
+        from recovery import load_day
+        df=load_day(d,columns=["utc_start","node_id","LMP"])
         raw=df[df.utc_start.isin(times)].pivot(index="utc_start",columns="node_id",values="LMP").reindex(index=times,columns=inventory.index)
         for lo,hi,mapping in segments(times,inventory.index):
             for j in range(lo,hi):

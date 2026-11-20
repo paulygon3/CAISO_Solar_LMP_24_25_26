@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from common import *
 from acquire import periods,gh
+from recovery import load_day,day_recovered
 from reference import ZONES,BASE_FIELDS,segments,contour
 
 BATCH=512
@@ -46,7 +47,7 @@ def inventory(days):
         path=ROOT/"canonical"/(str(day)+".parquet")
         m=json.loads((ROOT/"manifests"/("canonical_"+str(day)+".json")).read_text())
         if sha(path)!=m["sha256"]:raise ValueError("canonical hash "+str(day))
-        a=pd.read_parquet(path,columns=["node_id","node_name","utc_start","LMP"])
+        a=load_day(day,columns=["node_id","node_name","utc_start","LMP"])
         if a.duplicated(["node_id","utc_start"]).any():raise ValueError("duplicate canonical key "+str(day))
         names=a[["node_id","node_name"]].drop_duplicates().set_index("node_id")
         good=a[a.LMP.notna()].sort_values("utc_start")
@@ -106,12 +107,12 @@ def stage_month(first,last,inventory,stage):
     panels={f:np.full((len(idx),len(ids)),np.nan,dtype=np.float64) for f in sorted(fields)}
     diagnostics=[]
     for d in date_range(first,last):
-        a=pd.read_parquet(ROOT/"canonical"/(str(d)+".parquet"))
+        a=load_day(d)
         hh=idx.get_indexer(a.utc_start);ii=ids.get_indexer(a.node_id)
         if min(hh.min(),ii.min())<0 or a.duplicated(["node_id","utc_start"]).any():raise ValueError(f"unexpected panel keys {d}")
         for field in fields.intersection(a.columns):panels[field][hh,ii]=a[field]
         m=json.loads((ROOT/"manifests"/("canonical_"+str(d)+".json")).read_text());diagnostics.append(m)
-        if int(np.isfinite(a.LMP).sum())!=m["valid_lmp_hours"]:raise ValueError("LMP count discrepancy")
+        if int(np.isfinite(a.LMP).sum())!=m["valid_lmp_hours"]+day_recovered(d):raise ValueError("LMP count discrepancy")
     resolution=np.full((len(idx),len(ids)),-1,dtype=np.int8)
     tables=[]
     for lo,hi,meta in segments(idx,ids):
@@ -130,7 +131,7 @@ def stage_month(first,last,inventory,stage):
             for k,panel in panels.items():write_array(z,k,np.ascontiguousarray(panel[:,i:i+BATCH]))
             write_array(z,"mapping",np.ascontiguousarray(resolution[:,i:i+BATCH]))
         os.replace(dest.with_suffix(".part"),dest)
-    save_json(out/"stage.json",dict(start=str(first),end=str(last),hours=len(idx),nodes=len(ids),fields=sorted(fields),observed=sum(m["valid_lmp_hours"] for m in diagnostics),
+    save_json(out/"stage.json",dict(start=str(first),end=str(last),hours=len(idx),nodes=len(ids),fields=sorted(fields),observed=sum(m["valid_lmp_hours"]+day_recovered(date.fromisoformat(m["date"])) for m in diagnostics),
         exact_duplicates=sum(m["exact_duplicates"] for m in diagnostics),conflicting_keys=sum(m["conflicting_keys"] for m in diagnostics),
         component_exceptions=sum(m["component_exception_count"] or 0 for m in diagnostics),scope="Fetched source data"))
     print("Staged",month,len(idx),len(ids),flush=True)

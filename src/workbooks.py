@@ -10,6 +10,7 @@ from common import *
 from reference import ZONES,BASE_FIELDS,MAP_SOURCE
 from dataset import BATCH
 from study import SPEC_HASH
+from recovery import day_recovered,load_day
 from aggregate import profile,weights,period_definitions
 from excel_stream import Sheet,write_workbook
 
@@ -79,9 +80,14 @@ def build_tables(inv,index,stage,months,test=False):
         relevant=[p for p in (ROOT/"manifests").glob("PRC_LMP_"+d["date"]+"*.json") if json.loads(p.read_text())["params"].get("grp_type")=="ALL"]
         if len(relevant)!=1:raise ValueError("missing daily source provenance")
         m=json.loads(relevant[0].read_text())
+        day=date.fromisoformat(d["date"]);added=day_recovered(day)
+        missing_utc=d["unobserved_marketwide_lmp_hours"];priced_nodes=d["priced_nodes"]
+        if added:
+            day_frame=load_day(day,columns=["node_id","utc_start","LMP"]);valid=day_frame[day_frame.LMP.notna()]
+            priced_nodes=valid.node_id.nunique();missing_utc=[s for s in missing_utc if pd.Timestamp(s) not in set(valid.utc_start)]
         source_log.append(dict(delivery_date=d["date"],retrieved_utc=m["retrieved"],source_sha256=m["sha256"],canonical_sha256=d["sha256"],
-             source_report="PRC_LMP",version=m["params"]["version"],valid_node_hours=d["valid_lmp_hours"],priced_nodes=d["priced_nodes"],
-             expected_hours=d["expected_hours"],marketwide_missing_utc="|".join(d["unobserved_marketwide_lmp_hours"]),components="|".join(d["distinct_components"]),
+             source_report="PRC_LMP",version=m["params"]["version"],valid_node_hours=d["valid_lmp_hours"]+added,all_location_price_hours=d["valid_lmp_hours"],recovered_named_price_hours=added,priced_nodes=priced_nodes,
+             expected_hours=d["expected_hours"],marketwide_missing_utc="|".join(missing_utc),components="|".join(d["distinct_components"]),
              exact_duplicate_rows=d["exact_duplicates"],conflicting_keys=d["conflicting_keys"],component_exception_count=d["component_exception_count"],
              max_component_residual_usd_per_mwh=d["max_abs_component_difference"]))
     daily=pd.DataFrame(source_log)
@@ -103,7 +109,7 @@ def build_tables(inv,index,stage,months,test=False):
     history["rule_version_sha256"]=sha(ROOT/"src/reference.py")
     history["evidence_lookup"]="Use the effective span to locate the signed monthly analysis/zone manifests and original ATLAS row for this exact ID"
     quality=json.loads((stage/"quality.json").read_text());gap=quality["gaps"];model=quality["solar"]
-    missing=sum(len(d["unobserved_marketwide_lmp_hours"]) for d in files)
+    missing=sum(len(s.split("|")) for s in daily.marketwide_missing_utc if s)
     qa=[
         ("Expected delivery hours",len(index),"UTC scaffold from Pacific delivery bounds"),
         ("All-location source archive days",len(daily),"Validated CRC, schema, source and canonical hashes"),
@@ -115,6 +121,7 @@ def build_tables(inv,index,stage,months,test=False):
         ("Unresolved conflicting source keys",int(daily.conflicting_keys.sum()),"Quarantined; no arbitrary price precedence"),
         ("Component reconciliation exceptions",int(daily.component_exception_count.sum()),"Review threshold 0.00005 USD/MWh; retain official total LMP"),
         ("Nonmissing hourly numerators",int(summary.known_weight_valid_priced_hours.sum()),"Includes valid zero production; source and mapping must be available"),
+        ("Recovered official named prices",int(daily.recovered_named_price_hours.sum()),"Alternate source retrieval on internally missing observations. New published values retain their source and original canonical gaps"),
         ("Price report and version","PRC_LMP v12 / DAM","Individual source and canonical checksums in Daily_Source_QA"),
         ("Acquisition retries","See retrieval event logs","Raw request attempts, recovery and cache hits accompany the monthly artifacts or Actions acquisition log"),
         ("Independent retrieval checks",matches,"Every available hub total across the workbook compared with a separate named-hub retrieval"),

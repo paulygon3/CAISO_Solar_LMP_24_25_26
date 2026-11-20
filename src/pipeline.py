@@ -33,6 +33,10 @@ def restore(year=None):
 def build_inventory():
     first=date.fromisoformat(C["start"]);end=date.fromisoformat(C["end_exclusive"])
     table=save_inventory(date_range(first,end),INVENTORY)
+    from recovery import run,load_recovery
+    added=run(table,first,end,INVENTORY)
+    load_recovery.cache_clear()
+    if added:table=save_inventory(date_range(first,end),INVENTORY)
     save_json(INVENTORY/"inventory.json",dict(nodes=len(table),start=str(first),end_exclusive=str(end),config_sha256=CONFIG_HASH,
         sha256=sha(INVENTORY/"inventory.parquet"),dates=(end-first).days,generated=utcnow()))
 

@@ -35,7 +35,8 @@ def make_report():
     gaps=sum(len(m["missing_market_intervals"]) for m in manifests)
     conflicts=sum(m["qa"]["Unresolved conflicting source keys"] for m in manifests)
     status="COMPLETE_WITH_DOCUMENTED_SOURCE_GAPS" if gaps or conflicts else "COMPLETE"
-    report={"status":status,"generated_utc":utcnow(),"config_sha256":CONFIG_HASH,"years":manifests,"comparison":compare,"retrieval":diag,"unobserved_marketwide_intervals":gaps}
+    recovery=json.loads((ROOT/"staging/inventory/price_recovery.json").read_text())
+    report={"price_recovery":{"named_requests":recovery["internal_missing_named_requests"],"additional_published_prices":recovery["recovered_published_prices"]},"status":status,"generated_utc":utcnow(),"config_sha256":CONFIG_HASH,"years":manifests,"comparison":compare,"retrieval":diag,"unobserved_marketwide_intervals":gaps}
     save_json(SUPPORT/"completion.json",report)
     lines=["# CAISO day-ahead solar-weighted prices","",f"**{status}**. Pacific delivery from January 1, 2024 through November 18, 2026. Each workbook retains the same {manifests[0]['nodes']:,} historical price identifiers, including the three named reference hubs.","",
         "| Year | First and last observed delivery date | Hours | Nonmissing node-hour prices | Sheets | File size (MiB) |","|---|---|---:|---:|---:|---:|"]
@@ -47,6 +48,7 @@ def make_report():
         "",f"Price retrievals span {min(m['source_first_retrieved_utc'] for m in manifests)} through {max(m['source_last_retrieved_utc'] for m in manifests)}. The retrieval summary records cache hits, successful attempts and transport errors from the archived acquisition logs.",
         "","Each archive passed CRC validation and reopened with openpyxl. The validator checked every matrix header, timestamp, nonmissing-cell total, dictionary address, summary key and display field. At the following sample sizes it compared individual raw prices and weighted numerators with dated canonical prices and mapping evidence.",""]
     for m in manifests:lines.append(f"- {m['year']} covered {m['sampled_raw_cells']:,} raw and {m['sampled_weighted_cells']:,} weighted positions at {len(m['sample_utc'])} UTC timestamps. SHA-256 `{m['sha256']}`.")
+    lines+=["",f"An additional {recovery['internal_missing_named_requests']:,} named-node requests independently checked internal gaps in the all-location data. They recovered {recovery['recovered_published_prices']:,} additional published hourly prices. The original all-location rows and named-source archives are preserved separately."]
     lines+=["","## Balanced-node comparison and coverage","",f"{compare['balanced_nodes']:,} nonreference locations held the same assigned zone and met both 90% coverage thresholds in all three January 1–November 18 periods. The per-node estimates are in balanced_node_matched_period.parquet. Population_comparison.csv gives within-zone cross-node quantiles for full-year/YTD, matched-calendar and balanced populations.",""]
     for x in compare["highest_internal_missing_share_by_pacific_hour"]:
         lines.append(f"- In {x['year']}, Pacific hour {x['hour']:02d} had the largest share of internally observable node-hours missing, {x['numerator']:,} of {x['denominator']:,} ({x['share']:.3%}). The gap-clustering tables also break out month, source batch, market regime, node type, zone and source market area.")
