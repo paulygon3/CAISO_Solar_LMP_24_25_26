@@ -89,4 +89,4 @@ def make_report():
         inv=ROOT/"staging/inventory"
         for path in sorted(inv.glob("*")):
             if path.is_file():z.write(path,"inventory/"+path.name)
-        for name in ["DATA_CLEANING_AND_LESSONS.md","config.json","analysis_specification.json","requirements.txt"]:z.write(ROOT/name,name)
+        for name in ["DATA_CLEANING_AND_LESSONS.md","config.json","analysis_specification.json","docs/study-change-log.md","requirements.txt"]:z.write(ROOT/name,name)

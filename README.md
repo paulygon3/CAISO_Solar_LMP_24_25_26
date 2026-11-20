@@ -14,7 +14,7 @@ The monthly-input release stores original CAISO archives and smaller checksummed
 
 The primary calculations use published hourly total LMP. A missing price remains blank. The scenario weights are PVWatts V8 hourly AC for six equally paired locations under fixed typical meteorological weather. The model has 100 MW equivalent AC capacity per location before the zonal average. UTC joins, local standard solar time, and February 29 handling are explicit. Each weighted estimate divides its observed price-times-weight sum by its matched weight-hours. Separate full calendar and solar denominators measure coverage. A retained estimate can remain below the project’s 90% threshold for display.
 
-Reference memberships and their effective dates determine zone assignments. Inference, conflicts, unsupported classifications and source gaps carry separate flags. Basis uses the same node-zone weights and the same matched times for both prices. Component attribution is published only on complete, reconciled common support. [Frozen analysis specification](analysis_specification.json) · [Price and model configuration](config.json) · [Methods, limits and lessons](DATA_CLEANING_AND_LESSONS.md)
+Reference memberships and their effective dates determine zone assignments. Inference, conflicts, unsupported classifications and source gaps carry separate flags. Basis uses the same node-zone weights and the same matched times for both prices. Component attribution is published only on complete, reconciled common support. [Frozen analysis specification](analysis_specification.json) · [Study change log](docs/study-change-log.md) · [Price and model configuration](config.json) · [Methods, limits and lessons](DATA_CLEANING_AND_LESSONS.md)
 
 ## Reproduce the study
 
