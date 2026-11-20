@@ -51,6 +51,11 @@ def build(first,end,inv,stage,dest,report,test=False):
         if lo>=end or hi<=first:continue
         stage_month(max(first,lo),min(hi,end),inv,stage)
         months.append(lo.strftime("%Y-%m"))
+    from gaps import assess
+    from study import audit_model,SPEC_HASH
+    solar_audit=audit_model(idx,profile(year,idx),report)
+    gap_audit=assess(inv,idx,stage,months,report)
+    save_json(stage/"quality.json",dict(solar=solar_audit,gaps=gap_audit))
     calculate(inv,idx,stage,months,test)
     sheets=build_tables(inv,idx,stage,months,test)
     for sheet in sheets:
@@ -72,7 +77,7 @@ def build(first,end,inv,stage,dest,report,test=False):
     print("Reopening the written candidate",path.stat().st_size,flush=True)
     check=validate(path,inv,idx,test);seal(path,check)
     daily=pd.read_parquet(report/"Daily_Source_QA.parquet")
-    check.update(year=year,period_first=str(first),period_last=str(end-DAY),study_inventory_nodes=len(inv),source_days=len(daily),
+    check.update(analysis_specification_sha256=SPEC_HASH,gap_audit=gap_audit,solar_audit=solar_audit,year=year,period_first=str(first),period_last=str(end-DAY),study_inventory_nodes=len(inv),source_days=len(daily),
         observed_first_day=daily.loc[daily.valid_node_hours>0,"delivery_date"].min(),observed_last_day=daily.loc[daily.valid_node_hours>0,"delivery_date"].max(),
         source_first_retrieved_utc=daily.retrieved_utc.min(),source_last_retrieved_utc=daily.retrieved_utc.max(),
         missing_market_intervals=[v for s in daily.marketwide_missing_utc for v in s.split("|") if v],

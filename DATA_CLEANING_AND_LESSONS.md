@@ -1,8 +1,8 @@
 # CAISO zonal solar-weighted prices
 
-## Run outcome
+## Initial checkpoint
 
-The run reached validated profiles and an all-location pilot. See `manifests/run.json` for status, dates, source counts, and the measured storage estimates. The annual workbooks and associated production checks are pending. The three-hub calculation has its own evidence in `manifests/hubs.json` and `results/verified_hub_periods.csv` when completed. The supplied PDF uses one common Fresno profile and year-specific inventories. All quantities in this checkpoint come from fresh source retrieval or the requested calendar.
+The original checkpoint reached validated profiles and an all-location pilot. The references in this section point inside the downloadable checkpoint. See `manifests/run.json` for status, dates, source counts, and the measured storage estimates. Annual verification is reported separately in the publication receipts and final report. The three-hub calculation has its own evidence in `manifests/hubs.json` and `results/verified_hub_periods.csv` when completed. The supplied PDF uses one common Fresno profile and year-specific inventories. All quantities in this checkpoint come from fresh source retrieval or the requested calendar.
 
 ## Findings and treatment
 
@@ -25,6 +25,29 @@ The full named-hub series initially failed its calendar assertion by 24 hours. F
 Within-zone comparisons use a common standardized production shape. Cross-zone comparisons reflect both prices and different production shapes. The fixed TMY removes actual-year weather variation. The 90% display threshold has no statistical error bound. Mapping uncertainty and missing prices affect different parts of the calculation. Complete component inputs establish that the fields exist on common support. This alone cannot independently validate the economic decomposition.
 
 Hub basis uses the same node-zone weights on both prices over their common UTC support. The three hub reference results use each hub's own-zone weights. Each period's denominator uses all expected hours, with blank available-price estimates at zero matched weight. Coverage and eligible-display rules are separate from retained estimates.
+
+## Production changes and evidence
+
+The frozen specification adds gap classifications, component attribution, uncertainty reporting and a balanced-node comparison. Official monthly raw archives are immutable release assets. SHA-256 receipts connect those assets to daily canonical files. The pipeline compares all three hub histories to separately issued named-hub OASIS requests. Published total prices, published components, deterministic calendar treatment, inferred membership, modeled output and analytical results have separate fields and provenance.
+
+The regional ATLAS source describes internal, unexpanded areas relative to both transmission paths. Inside AS_CAISO, north of both paths maps to NP15, south of Path 15 and north of Path 26 maps to ZP26, and south of both maps to SP15. Published hub membership is direct evidence. The path pair or a fully accounted set of nonzero single-zone LDF members is an inference. Direct and inferred disagreements are flagged. The November 2026 contour snapshot is descriptive at its publication time. A direct, inferred, conflicting and unresolved span can have different effects within a single node’s price history. The year and multi-year registers retain them. [Official FNM mapping reference, AS Table sheet](https://www.caiso.com/documents/full-network-model-pricing-node-mapping-reference.xls) · [CAISO Path 26 zone decision](https://www.caiso.com/documents/attachementj-memorandum-isoboardonaddition-newcongestionzone-addresspath26intrazonalcongestion.pdf)
+
+The raw model audit checked all 8,760 hourly AC observations at each of six sites. Reconstructing the three calendar-aligned zone series from these original values supports the zero-repair result. The study retains a separate empty repair log, predeclared acceptance criteria and an explicit inapplicable changed-support sensitivity. The 24 planned leap-day hours in 2024 carry their own flag. Fitting a repair model requires actual eligible gaps, representative hidden blocks and held-out error and price-impact tests under the frozen specification.
+
+A missing price can precede a node’s first observation, follow its last, or fall inside its observation window. The price register covers every missing canonical scaffold cell. The mapping register records intervals with conflicting, missing or external evidence independently. The hourly audit measures simultaneous gaps in locations between their first and last observations. The predeclared widespread threshold is 50 locations and 10% of the internally observable population. The clustering tables retain exposure denominators when comparing hours, source dates, market regimes, node types, zones and source market areas. These descriptive patterns do not establish why prices were absent. The pre/post EDAM split uses the documented May 1, 2026 launch. [CAISO launch announcement](https://www.caiso.com/about/news/news-releases/edam-is-live-pacificorp-and-caiso-successfully-launch-new-market-may-1)
+
+For each hub, the analytical layer retains total basis, published energy, congestion, loss and other applicable component differences on the same node-zone-weighted support. Incomplete attribution, unknown component structures or material residuals block attribution while preserving any valid total price difference. The daily evidence groups component support by dated market and explicitly timestamped snapshot area. Unavailable BAA labels stay unknown. A causal interpretation requires additional information such as constraint shadow prices, shift factors, outages and network conditions.
+
+The diagnostic tables include unweighted quantiles, negative-price frequency, solar-weighted negative exposure and the largest ten hours’ share of absolute weighted contributions. The balanced sensitivity uses the same mapped and adequately observed locations in all three matched-calendar periods. The comparison report separates those results from the full historical population. Fixed-model assumptions, unobserved prices, mapping, and future market variation are distinct uncertainties.
+
+The production exporter streams one worksheet at a time and uses deterministically ordered 512-location batches. An early validator incorrectly treated the XML declaration as the header row. A real two-day workbook exposed the sequencing error. The reader now locates the actual header row, checks all written row numbers and compares source-derived samples across every batch. A digest, final ZIP integrity check and independent readback of the amended QA sheet anchor the release. Desktop Excel opening time and memory depend on the workstation.
+
+## Priorities for subsequent refreshes
+
+1. Preserve the exact source and study configuration versions and record the reason and affected outputs for any change.
+2. Extend historical market-area evidence for unresolved IDs using dated authoritative records. Keep remaining evidence gaps visible.
+3. Inspect simultaneous internal gaps and material component exceptions against official originals before interpreting any economic cause.
+4. Reassess peak disk, memory and file size when adding identifiers or periods. Verify complete archives and direct download links before handoff.
 
 ## Resume checks
 

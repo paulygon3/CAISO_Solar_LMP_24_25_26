@@ -9,6 +9,7 @@ from xlsxwriter.utility import xl_col_to_name
 from common import *
 from reference import ZONES,BASE_FIELDS,MAP_SOURCE
 from dataset import BATCH
+from study import SPEC_HASH
 from aggregate import profile,weights,period_definitions
 from excel_stream import Sheet,write_workbook
 
@@ -91,6 +92,7 @@ def build_tables(inv,index,stage,months,test=False):
     dictcols=["node_id","node_name","node_classification","node_subtype","resource_type","description","tac_area","as_region","market_classification","metadata_match_status","solar_zone","zone_mapping_status","zone_mapping_method","mapping_detail","published_hubs","snapshot_area","snapshot_type","price_map_snapshot_time","reference_flag","pdrp_name_flag","availability","first_observed_utc","last_observed_utc"]
     dictionary=summary[dictcols].copy().merge(inv[[c for c in inv if c.startswith("historical_")]],left_on="node_id",right_index=True,validate="one_to_one",sort=False)
     dictionary["zone_mapping_source"]=MAP_SOURCE
+    dictionary["zone_rule_version_sha256"]=sha(ROOT/"src/reference.py")
     dictionary["raw_sheet"]=[f"Hourly_LMP_{i//BATCH+1:03d}" for i in range(n)]
     dictionary["weighted_sheet"]=[f"Hourly_Weighted_{i//BATCH+1:03d}" for i in range(n)]
     dictionary["matrix_column"]=[xl_col_to_name(len(TIMECOLS)+i%BATCH) for i in range(n)]
@@ -98,6 +100,9 @@ def build_tables(inv,index,stage,months,test=False):
     history=history.merge(inv[["node_name"]],left_on="node_id",right_index=True,how="left",validate="many_to_one")
     history=history[["node_id","node_name","effective_from_utc","effective_until_utc_exclusive",*BASE_FIELDS]]
     history["zone_mapping_source"]=MAP_SOURCE
+    history["rule_version_sha256"]=sha(ROOT/"src/reference.py")
+    history["evidence_lookup"]="Use the effective span to locate the signed monthly analysis/zone manifests and original ATLAS row for this exact ID"
+    quality=json.loads((stage/"quality.json").read_text());gap=quality["gaps"];model=quality["solar"]
     missing=sum(len(d["unobserved_marketwide_lmp_hours"]) for d in files)
     qa=[
         ("Expected delivery hours",len(index),"UTC scaffold from Pacific delivery bounds"),
@@ -113,6 +118,19 @@ def build_tables(inv,index,stage,months,test=False):
         ("Price report and version","PRC_LMP v12 / DAM","Individual source and canonical checksums in Daily_Source_QA"),
         ("Acquisition retries","See retrieval event logs","Raw request attempts, recovery and cache hits accompany the monthly artifacts or Actions acquisition log"),
         ("Independent retrieval checks",matches,"Every available hub total across the workbook compared with a separate named-hub retrieval"),
+        ("Stage / Source access","VERIFIED","Official DAM daily CSVs, eight historical ATLAS reports, original PVWatts and independently requested hubs"),
+        ("Stage / Download completeness","VERIFIED_ARCHIVES",f"{len(daily)} verified daily archives in this export; exact market-wide gaps listed separately"),
+        ("Stage / Canonical validity","PASS_WITH_QUARANTINE" if daily.conflicting_keys.sum() else "PASS","Source conflicts are quarantined at the component key"),
+        ("Stage / Zone mapping","PARTIAL" if (summary.mapped_hours<len(index)).any() else "COMPLETE","Each node is retained. Effective history, evidence and inferred status in Node_Zone_History"),
+        ("Stage / Solar model validity","PASS","All 52,560 location TMY observations verified, all three hour-aligned modeled composites reconstructed"),
+        ("Stage / Estimated solar repair",model["repair_validation"],"Originals complete in this frozen study. No repair model was fitted or evaluated"),
+        ("Estimated solar repair hours",model["estimated_repair_hours"],"Unexpected estimated values only"),
+        ("Repaired share of solar weight",model["repair_weight_share"],"Fraction of profile weight-hours from estimated repairs"),
+        ("Changed-support sensitivity",model["changed_support_test"],"No affected timestamps, prices, bases, negative exposures or display decisions"),
+        ("Deterministic February 29 hours",model["leap_day_hours"],"Adjacent-day local-standard hour average, counted apart from repairs"),
+        ("Missing price node-hours",gap["missing_node_hours"],"Complete historical union, before and after observations included. Detailed runs in annual evidence"),
+        ("Widespread internal gap hours",gap["widespread_hours"],"At least 50 IDs and 10% of internally observable IDs missing simultaneously"),
+        ("Stage / Calculation reconciliation","PASS","Additive, normalized-weight, common-price basis and component checks executed; component exceptions flagged separately"),
         ("Monthly additive reconciliation","PASS","Hours, weighted numerator, negative counts, matched/full support and reconciliation counts"),
         ("Hub basis and normalized contribution checks","PASS","Every node-period checked"),
         ("Source schema and join cardinality","PASS","Daily keys unique; complete node-hour scaffold and unique identifier joins"),
@@ -130,10 +148,15 @@ def build_tables(inv,index,stage,months,test=False):
         ("COMPONENTS","Residuals exceeding project review threshold",int(daily.component_exception_count.sum()),"Daily_Source_QA","Use published LMP and published components on complete support","A matching sum cannot independently verify component economics","DISCLOSED"),
         ("SOURCE_CONFLICTS","Unresolved conflicting canonical keys",int(daily.conflicting_keys.sum()),"Canonical manifests and quarantine files","Quarantine ambiguous observations","Affected values remain blank","DISCLOSED"),
     ]
+    issues.extend([
+        ("PRICE_GAPS","Missing total-price node-hours",gap["missing_node_hours"],"price_gap_register.parquet; hourly_gap_scope.parquet","Keep unpriced timestamps blank and preserve separate coverage measures","A missing observation alone does not establish a retirement, outage or causal mechanism","DISCLOSED"),
+        ("WIDESPREAD","Hours meeting simultaneous internal-gap criterion",gap["widespread_hours"],"hourly_gap_scope.parquet; widespread_gaps.json","Publish the affected intervals and file provenance","Common timing has no assigned physical cause","OPEN" if gap["widespread_hours"] else "NO_OCCURRENCE"),
+        ("SOLAR_REPAIR","Estimated production-profile repair hours",model["estimated_repair_hours"],"solar_location_audit.csv; original PVWatts hashes and solar_repairs.csv","Preserve original modeled AC and deterministic leap-day indicators","No repair error is estimated for fully observed model output","NO_REPAIR_REQUIRED")])
     for _,r in daily.assign(change=daily.priced_nodes.pct_change()).dropna(subset=["change"]).query("abs(change)>=0.20").iterrows():
         issues.append(("INVENTORY_"+r.delivery_date,"Daily priced location count changed by at least 20%",int(r.priced_nodes),f"Daily_Source_QA; change {r.change:.2%}","Retain all historical identifiers","Changes can reflect source participation or availability; cause unverified","OPEN"))
     issues_df=pd.DataFrame(issues,columns=["issue_id","confirmed_finding","affected_count","detection_evidence","treatment","interpretation_impact","resolution_status"])
     qa_df.loc[len(qa_df)]=["Processing and source completion",completeness,"Mapping and display counts are shown separately"]
+    issues_df["remaining_hypothesis_or_followup"]=issues_df.interpretation_impact
     text={
         "Scope":f"{year} / {primary}, {prof.delivery_date.iat[0]} through {prof.delivery_date.iat[-1]}, Pacific inclusive. {len(index):,} expected hours; {n:,} historical locations.",
         "Completion":completeness,"Market":"CAISO OASIS PRC_LMP v12, DAM total LMP in USD/MWh, UTC interval starts.",
@@ -154,9 +177,19 @@ def build_tables(inv,index,stage,months,test=False):
         "Evidence and QA":"Node_Zone_History supplies effective applied spans; Daily_Source_QA records individually dated retrievals. QA_Validation and Data_Issues document source, computations, classification and readback.",
         "Historical availability":"Node_Dictionary gives first and last price and largest internal gap over the whole study. A name containing PDRP is a naming heuristic. A mixed-classification period points to effective history.",
         "Scenario interpretation":"Within-zone prices use common weights. Cross-zone comparisons also reflect different TMY shapes. These project calculations use modeled profiles, not actual-year fleet generation or capture revenue.",
-        "Configuration SHA-256":CONFIG_HASH}
+        "Analytical design":"analysis_specification.json fixes this historical descriptive study. Estimates use the full price-ID union, a matched-calendar subset, and a separate cross-year balanced-node comparison in the supporting evidence archive.",
+        "Data origins":"Raw CAISO prices and fields are published. PVWatts AC is modeled. Leap-day synthesis is a deterministic calendar convention. Geographic AS/LDF assignments carry an inferred flag. Metrics and basis attribution are calculated.",
+        "Gap register":"Detailed per-node runs, known and unknown solar exposure, hourly simultaneous gaps, dated classification composition, component support, source batches and market regimes are in the supporting evidence archive.",
+        "Repairs":"Original outputs at all six locations are complete. No estimated repairs. Repair validation and changed-support sensitivity are inapplicable; leap-day synthesis is flagged independently.",
+        "Descriptive diagnostics":"LMP quantiles use unweighted finite hourly prices. The top ten hours share is the sum of the ten largest absolute price-times-weight contributions divided by their absolute total. No generic sampling confidence intervals are attached.",
+        "Basis attribution":"Differences in published MCE, MCC, MCL, MGHG and any applicable components use exactly the total-basis support and node-zone weights. Incomplete or materially unreconciled attribution is blocked. Residuals and support are explicit. Physical attribution requires constraint, shadow-price, shift-factor and outage evidence.",
+        "Configuration SHA-256":CONFIG_HASH,"Analysis specification SHA-256":SPEC_HASH}
+    configframe=source_profiles()
+    configframe["annual_calendar_profile_sha256"]=sha(ROOT/"profiles"/f"Solar_Profile_{year}.csv.gz")
+    configframe["unexpected_model_repair_hours"]=0
+    configframe["limitations"]="Fixed TMY production at two equal-capacity proxy sites per zone; modeled AC excludes curtailment and storage"
     sheets=[frame_sheet("README",pd.DataFrame(list(text.items()),columns=["topic","value"])),
-            frame_sheet("Solar_Profile",prof.reset_index(drop=True)),frame_sheet("Solar_Profile_Config",source_profiles()),
+            frame_sheet("Solar_Profile",prof.reset_index(drop=True)),frame_sheet("Solar_Profile_Config",configframe),
             table_from_summary("Node_Summary",stage,[primary],nb,n),table_from_summary("Monthly_Summary",stage,months,nb,n),
             table_from_summary("Matched_Period",stage,matched,nb,n),frame_sheet("Hub_Comparison",hub)]
     hubsumm=[]

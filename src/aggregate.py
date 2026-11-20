@@ -1,5 +1,7 @@
 """Vectorized node-period estimates. All arrays share the complete UTC hour by historical-ID scaffold."""
 import json
+import warnings
+from attribution import decompose
 import numpy as np
 import pandas as pd
 from common import *
@@ -27,7 +29,7 @@ def profile(year,idx):
         if f[z+"_weight_hours"].isna().any() or not np.allclose(f[z+"_output_mw"],100*f[z+"_weight"]):raise ValueError("solar units or profile gap")
     return f
 
-def summarize_period(prices,codes,w,hub_values,components,applicable,times):
+def summarize_period(prices,codes,w,hub_values,components,applicable,times,hub_components=None):
     n,k=prices.shape
     valid=np.isfinite(prices);count=valid.sum(0)
     resolved=codes>=0;all_resolved=resolved.all(0)
@@ -69,6 +71,15 @@ def summarize_period(prices,codes,w,hub_values,components,applicable,times):
         solar_capture_rate=np.where(mean>near,ratio(sw,mean),np.nan),
         capture_status=np.select([count==0,~np.isfinite(sw),np.abs(mean)<=near,mean<0],["NO_VALID_PRICE","NO_ESTIMATE","NEAR_ZERO_DENOMINATOR","NEGATIVE_DENOMINATOR"],default="OK"),
         negative_weight_hours=np.where(all_resolved,neg_w,np.nan),negative_price_solar_share=np.where(all_resolved,ratio(neg_w,den),np.nan))
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore",message="All-NaN slice encountered",category=RuntimeWarning)
+        quantiles=np.nanquantile(prices,[0.10,0.50,0.90],axis=0)
+    absolute=np.abs(safe_w*safe_p)
+    top=min(10,n)
+    out.update(p10_lmp_usd_per_mwh=quantiles[0],median_lmp_usd_per_mwh=quantiles[1],p90_lmp_usd_per_mwh=quantiles[2],
+        negative_price_frequency=ratio(neg.sum(0),count),
+        largest_10_hours_absolute_weighted_contribution_share=np.where(all_resolved,ratio(np.partition(absolute,n-top,axis=0)[n-top:].sum(0),absolute.sum(0)),np.nan))
+    del absolute
     complete=valid.copy()
     total_components=np.zeros_like(prices)
     known_definition=np.ones(n,dtype=bool)
@@ -113,6 +124,8 @@ def summarize_period(prices,codes,w,hub_values,components,applicable,times):
             matched_node_usd_per_mwh=pn,matched_hub_usd_per_mwh=ph,basis_usd_per_mwh=basis,
             display_basis_usd_per_mwh=np.where(pair_ok,basis,np.nan),eligible=pair_ok,
             eligibility_reason=np.where(~all_resolved,problem,np.where(pair_ok,"ELIGIBLE",np.where(np.isfinite(basis),"LOW_COVERAGE","NO_MATCHED_WEIGHT"))))
+        if hub_components is not None:
+            metrics.update(decompose(prices,h[:,0],w,pair,all_resolved,components,{f:x[:,col] for f,x in hub_components.items()},applicable,pairden,basis))
         out.update({z+"_"+name:v for name,v in metrics.items()})
     if (den>full+1e-8).any() or np.any(np.isfinite(coverage)&((coverage<0)|(coverage>100+1e-8))):raise ValueError("solar coverage bounds")
     share=np.where(den>0,1/np.maximum(den,1e-300),0)
@@ -161,13 +174,17 @@ def calculate(inventory,index,stage,months,test=False):
         m=json.loads((ROOT/"manifests"/("canonical_"+str(d)+".json")).read_text())
         required.extend([m["distinct_components"]]*m["expected_hours"])
     fields=sorted(set().union(*required));app={f:np.array([f in x for x in required]) for f in fields}
-    hubs=[]
+    hubs=[];hub_components={f:[] for f in fields}
     for z in ZONES:
         pos=inventory.index.get_loc(C["basis_hubs"][z]);bi,col=divmod(pos,BATCH)
-        series=[]
+        series=[];cseries={f:[] for f in fields}
         for month in months:
-            with np.load(stage/month/f"batch-{bi:03d}.npz") as p:series.append(p["LMP"][:,col])
+            with np.load(stage/month/f"batch-{bi:03d}.npz") as p:
+                series.append(p["LMP"][:,col])
+                for f in fields:cseries[f].append(p[f][:,col] if f in p.files else np.full(len(series[-1]),np.nan))
         hubs.append(np.concatenate(series))
+        for f in fields:hub_components[f].append(np.concatenate(cseries[f]))
+    hub_components={f:np.column_stack(v) for f,v in hub_components.items()}
     h=np.column_stack(hubs)
     hubframe=solar[["utc_interval_start","utc_interval_end","pacific_start_with_offset","delivery_date"]+[z+"_weight_hours" for z in ZONES]].copy()
     for j,z in enumerate(ZONES):hubframe[z+"_hub_lmp_usd_per_mwh"]=h[:,j]
@@ -181,7 +198,7 @@ def calculate(inventory,index,stage,months,test=False):
         summaries={}
         for label,mask in multi.items():
             t=index[mask];stat=summarize_period(p[mask],c[mask],w[mask],h[mask],
-                {f:panels[f][mask] for f in fields},{f:app[f][mask] for f in fields},t)
+                {f:panels[f][mask] for f in fields},{f:app[f][mask] for f in fields},t,{f:hub_components[f][mask] for f in fields})
             stat.index=ids
             meta=period_metadata(history,t,ids)
             local=t.tz_convert(PACIFIC)

@@ -29,11 +29,13 @@ def make_report():
     for m in manifests:
         workbook=f/m["filename"]
         if m["sealed_readback"]!="PASS" or workbook.stat().st_size!=m["bytes"] or sha(workbook)!=m["sha256"]:raise ValueError("release validation mismatch")
+    from comparisons import comparisons
+    compare=comparisons(SUPPORT)
     diag=diagnostics()
     gaps=sum(len(m["missing_market_intervals"]) for m in manifests)
     conflicts=sum(m["qa"]["Unresolved conflicting source keys"] for m in manifests)
     status="COMPLETE_WITH_DOCUMENTED_SOURCE_GAPS" if gaps or conflicts else "COMPLETE"
-    report={"status":status,"generated_utc":utcnow(),"config_sha256":CONFIG_HASH,"years":manifests,"retrieval":diag,"unobserved_marketwide_intervals":gaps}
+    report={"status":status,"generated_utc":utcnow(),"config_sha256":CONFIG_HASH,"years":manifests,"comparison":compare,"retrieval":diag,"unobserved_marketwide_intervals":gaps}
     save_json(SUPPORT/"completion.json",report)
     lines=["# CAISO day-ahead solar-weighted prices","",f"**{status}**. Pacific delivery from January 1, 2024 through November 18, 2026. Each workbook retains the same {manifests[0]['nodes']:,} historical price identifiers, including the three named reference hubs.","",
         "| Year | First and last observed delivery date | Hours | Nonmissing node-hour prices | Sheets | File size (MiB) |","|---|---|---:|---:|---:|---:|"]
@@ -45,7 +47,10 @@ def make_report():
         "",f"Price retrievals span {min(m['source_first_retrieved_utc'] for m in manifests)} through {max(m['source_last_retrieved_utc'] for m in manifests)}. The retrieval summary records cache hits, successful attempts and transport errors from the archived acquisition logs.",
         "","Each archive passed CRC validation and reopened with openpyxl. The validator checked every matrix header, timestamp, nonmissing-cell total, dictionary address, summary key and display field. At the following sample sizes it compared individual raw prices and weighted numerators with dated canonical prices and mapping evidence.",""]
     for m in manifests:lines.append(f"- {m['year']} covered {m['sampled_raw_cells']:,} raw and {m['sampled_weighted_cells']:,} weighted positions at {len(m['sample_utc'])} UTC timestamps. SHA-256 `{m['sha256']}`.")
-    lines+=["","Prices use official DAM OASIS data. The six-site, three-zone PVWatts scenario represents fixed typical weather. Effective membership differences, unsupported mappings and incomplete price coverage have separate fields. Missing prices remain blank. Direct and inferred mapping details, external locations, component tests and prior pilot issues are documented in each workbook and the repository lessons.","",
+    lines+=["","## Balanced-node comparison and coverage","",f"{compare['balanced_nodes']:,} nonreference locations held the same assigned zone and met both 90% coverage thresholds in all three January 1–November 18 periods. The per-node estimates are in balanced_node_matched_period.parquet. Population_comparison.csv gives within-zone cross-node quantiles for full-year/YTD, matched-calendar and balanced populations.",""]
+    for x in compare["highest_internal_missing_share_by_pacific_hour"]:
+        lines.append(f"- In {x['year']}, Pacific hour {x['hour']:02d} had the largest share of internally observable node-hours missing, {x['numerator']:,} of {x['denominator']:,} ({x['share']:.3%}). The gap-clustering tables also break out month, source batch, market regime, node type, zone and source market area.")
+    lines+=["","## Observed, modeled and inferred","","Hourly prices and components are published CAISO observations. All six site TMY AC series were complete. The three weighted zonal profiles are modeled, with zero statistical repairs. The 24 hours of February 29, 2024 use the prespecified calendar rule. Numerical results and heatmap eligibility are calculated. Dated inferred classifications and unresolved IDs are recorded separately.","","Prices use official DAM OASIS data. The six-site, three-zone PVWatts scenario represents fixed typical weather. Effective membership differences, unsupported mappings and incomplete price coverage have separate fields. Missing prices remain blank. Direct and inferred mapping details, external locations, component tests and prior pilot issues are documented in each workbook and the repository lessons.","",
         "[Source archives](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26/releases/tag/market-inputs-v1) · [Source code and refresh instructions](https://github.com/paulygon3/CAISO_Solar_LMP_24_25_26)"]
     (SUPPORT/"RUN_REPORT.md").write_text("\n".join(lines)+"\n")
     with zipfile.ZipFile(ROOT/"staging/CAISO_provenance.zip","w",zipfile.ZIP_DEFLATED,compresslevel=3,allowZip64=True) as z:
@@ -54,4 +59,4 @@ def make_report():
         inv=ROOT/"staging/inventory"
         for path in sorted(inv.glob("*")):
             if path.is_file():z.write(path,"inventory/"+path.name)
-        for name in ["DATA_CLEANING_AND_LESSONS.md","config.json","requirements.txt"]:z.write(ROOT/name,name)
+        for name in ["DATA_CLEANING_AND_LESSONS.md","config.json","analysis_specification.json","requirements.txt"]:z.write(ROOT/name,name)

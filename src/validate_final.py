@@ -2,6 +2,7 @@
 from collections import Counter
 from pathlib import Path
 import json
+import math
 import re
 import subprocess
 import tempfile
@@ -104,6 +105,11 @@ def check_summary(z,member,cols,periods,ids):
     fields=["node_id","period","coverage_status","solar_zone","solar_coverage_pct","heatmap_eligible","heatmap_lmp_usd_per_mwh","solar_weighted_lmp_usd_per_mwh","matched_weight_hours","weighted_numerator","negative_price_solar_share"]
     for zone in ZONES:
         fields.extend(zone+"_"+s for s in ["eligible","solar_coverage_pct","basis_usd_per_mwh","display_basis_usd_per_mwh","matched_node_usd_per_mwh","matched_hub_usd_per_mwh"])
+    attribution={}
+    for z in ZONES:
+        names=[k for k in cols if k.startswith(z+"_") and k.endswith("_basis_diff_usd_per_mwh")]
+        fields+=names+[z+"_component_basis_status",z+"_component_basis_residual_usd_per_mwh"]
+        attribution[z]=names
     groups=Counter();count=0
     for row in extract_rows(z,member,cols,fields):
         p,n=divmod(count,len(ids));count+=1
@@ -116,7 +122,7 @@ def check_summary(z,member,cols,periods,ids):
         if row["coverage_status"]=="LOW_COVERAGE":require(sw is not None,"low coverage retention")
         if coverage is not None:require(-1e-8<=float(coverage)<=100+1e-8,"solar coverage bounds")
         if sw is not None:
-            require(np.isclose(float(sw),float(row["weighted_numerator"])/float(row["matched_weight_hours"]),rtol=1e-11,atol=1e-10),"weighted ratio readback")
+            require(math.isclose(float(sw),float(row["weighted_numerator"])/float(row["matched_weight_hours"]),rel_tol=1e-11,abs_tol=1e-10),"weighted ratio readback")
         if "negative_price_solar_share" in row:require(0<=float(row["negative_price_solar_share"])<=1+1e-9,"negative share bounds")
         for zone in ZONES:
             q=lambda name:row.get(zone+"_"+name)
@@ -126,6 +132,10 @@ def check_summary(z,member,cols,periods,ids):
             if b is not None:
                 diff=float(q("matched_node_usd_per_mwh"))-float(q("matched_hub_usd_per_mwh"))
                 require(abs(float(b)-diff)<1e-7,"basis readback identity")
+            parts=[float(row[k]) for k in attribution[zone] if k in row]
+            if q("component_basis_status")=="PUBLISHED_COMPONENTS_VERIFIED":
+                require(bool(parts) and b is not None and abs(sum(parts)+float(q("component_basis_residual_usd_per_mwh"))-float(b))<1e-7,"written component basis reconciliation")
+            else:require(not parts,"unverified component attribution was published")
         groups[row["coverage_status"]]+=1
     require(count==len(periods)*len(ids),"summary population")
     return count,dict(groups)
