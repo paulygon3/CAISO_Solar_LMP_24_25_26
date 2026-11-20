@@ -1,0 +1,262 @@
+Implement this task as a reproducible analytical study, not merely a sequence of downloads and spreadsheet calculations.
+
+Preserve the established requirements:
+- Actual published hourly CAISO day-ahead LMPs.
+- Three standardized modeled solar profiles: NP15, ZP26, and SP15.
+- Documented node-to-zone mapping.
+- Fixed zonal TMY assumptions across analysis years.
+- Exactly three final annual Excel workbooks.
+- Separate retained estimates, coverage measures, and heatmap-facing values.
+- No silent substitution of sources, zones, prices, or methodological assumptions.
+This section explicitly permits controlled repair of small solar-production-profile gaps under the rules below. It does not authorize filling missing LMPs in the primary published-price analysis.
+Create an analysis_specification configuration or document before full execution.
+
+Define:
+1. Analysis population and inclusion rules.
+2. Node identity and historical metadata handling.
+3. Market, pricing product, interval, and publication/revision rules.
+4. Solar-zone assignment rules.
+5. Profile construction and normalization.
+6. Time and calendar conventions.
+7. Primary and sensitivity scenarios.
+8. Missingness categories.
+9. Repair eligibility and validation criteria.
+10. Coverage and display thresholds.
+11. Component-reconciliation tolerances.
+12. Completion criteria.
+Separate the following concepts:
+- Published data.
+- Modeled solar assumptions.
+- Deterministic calendar transformations.
+- Estimated repairs.
+- Inferred classifications.
+- Analytical results.
+Do not describe these categories interchangeably.
+
+Freeze the primary configuration before full processing. Record subsequent changes with their reasons and affected outputs.
+Use distinct data layers:
+1. Raw: immutable source responses and model outputs.
+2. Canonical: normalized identifiers, timestamps, units, revisions, and components.
+3. Quality-assessed: validity flags, mapping statuses, and missingness classifications.
+4. Repaired: explicitly identified solar-profile repairs, where accepted.
+5. Analytical: additive sums, metrics, comparisons, and sensitivities.
+6. Delivery: validated Excel tables and matrices.
+Never overwrite original values with repaired values.
+
+Every repaired or inferred value must remain traceable to its source, rule, and processing version.
+Build an expected-hour scaffold and classify missingness before estimating anything.
+
+Distinguish:
+- Failed or incomplete retrieval.
+- Unpublished or unavailable source observation.
+- Invalid source value.
+- Duplicate or revision conflict.
+- Timestamp or calendar-mapping error.
+- Metadata join failure.
+- Unresolved solar-zone assignment.
+- Missing modeled solar output.
+- Internal node-price gap.
+- Pre-observation or post-observation node availability.
+- Widespread simultaneous gap.
+For each gap, record:
+- Node, zone, model location, or dataset affected.
+- UTC start/end.
+- Pacific timestamps.
+- Consecutive missing-hour count.
+- Month and requested analysis periods.
+- Share of expected hours affected.
+- Relevant solar-weight exposure, where estimable.
+- Established cause or UNKNOWN.
+- Proposed action.
+Examine whether gaps cluster by hour, month, node type, zone, BAA, market regime, or source batch.
+
+Do not assume missing observations are random. Do not infer retirement from disappearing prices.
+Apply this order:
+First:
+- Retry the source/model request.
+- Verify the returned schema and units.
+- Regenerate the modeled profile.
+- Correct timestamp, interval-label, leap-day, or year-boundary mapping problems.
+- Recover the original model output where possible.
+Recovering an original modeled value is not statistical imputation.
+Treat February 29 mapping as a deterministic modeling assumption.
+
+Flag it separately from unexpected missing-output repair.
+
+Do not count planned leap-day synthesis as an unexplained source gap.
+A gap is not acceptable to fill merely because it is short.
+
+Assess:
+- Consecutive duration.
+- Position in the solar day.
+- Neighboring valid values.
+- Seasonal context.
+- Whether the gap spans sunrise, sunset, or a steep production ramp.
+- Whether other modeled locations are also missing.
+- Potential influence on price-weighted results.
+As initial screening limits, evaluate gaps of no more than two consecutive hourly observations and no more than 0.5% of expected hours per location-month.
+
+These are configurable project screening limits—not industry standards or automatic approval criteria.
+
+If reliable repair requires broader assumptions, leave the gap unresolved and report the blocker.
+For a multi-location zonal profile, repair individual modeled-location series before applying the fixed location weights.
+
+Do not silently renormalize the composite over whichever locations happen to be available. That would change the represented generation mix over time.
+
+If location-level repair is not possible, flag the affected composite hours and evaluate them explicitly.
+Evaluate a small, justified set of methods, such as:
+- Linear interpolation for isolated internal gaps.
+- Corresponding-hour estimates from nearby calendar days.
+- Estimates using other modeled locations with demonstrated relationships.
+Do not assume one method is best in every season or time of day.
+
+Set a missing hour to zero only when independently supported as a zero-production hour by solar geometry/model evidence. Missingness itself is not evidence of zero production.
+
+Preserve valid model variability. Do not smooth all profiles merely because a repair method is available.
+Before applying a statistical repair:
+1. Select fully observed profile segments.
+2. Hide observations in blocks resembling actual gaps.
+3. Reconstruct them using candidate methods.
+4. Compare estimates with the hidden original values.
+5. Repeat across seasons, solar-day positions, and all three zones.
+Where a method is fitted or tuned, separate fitting/tuning data from evaluation blocks. Do not score performance on the same observations used to select parameters.
+
+If neighboring observations on both sides are used, label the method as retrospective gap repair, not forecasting.
+
+Evaluate at least:
+- Mean absolute error.
+- Root mean square error.
+- Mean signed error.
+- Error normalized by AC capacity.
+- Reconstructed energy bias.
+- Sensitivity during sunrise/sunset and high-output periods.
+- Change in solar-weighted LMP and matched hub basis.
+Do not use percentage error measures that divide by zero or near-zero nighttime generation.
+
+Set numerical acceptance criteria before selecting and applying the repair. Explain their units and analytical relevance.
+
+If no method meets the criteria, leave the gap unresolved. Do not relax thresholds merely to obtain a complete profile.
+For every accepted solar-profile repair, report:
+- Repaired-hour count.
+- Repaired-hour share.
+- Solar-weight share attributable to repaired hours.
+- Method.
+- Validation performance.
+- Affected zones, months, and annual/matched periods.
+Calculate sensitivity of final prices to the repair.
+
+Compare:
+1. Results using the accepted repaired profile.
+2. Results excluding the repaired timestamps from both the price numerator and matched-weight denominator.
+Label the second calculation as a changed-support sensitivity, not an independently known true result.
+
+Report changes in:
+- Solar-weighted LMP.
+- Matched hub basis.
+- Negative-price exposure.
+- Heatmap eligibility, if affected.
+Separate the magnitude of missingness from the magnitude of its effect. A small count of missing hours can still matter if those hours have substantial solar output or unusual prices.
+
+If an unresolved solar gap prevents a reliable full-period denominator, do not report apparently complete solar coverage.
+For the primary analysis:
+- Recover missing published prices through verified official retrieval where possible.
+- Correct processing mistakes.
+- Preserve remaining missing prices.
+- Use the documented valid-price denominator.
+- Keep observed coverage distinct from any optional estimated availability.
+Do not linearly interpolate LMPs, forward-fill them, replace them with hub prices, or treat them as zero in primary results.
+
+If an optional price-imputation scenario is later requested, it requires its own validation, labels, coverage accounting, and sensitivity analysis. Permission to repair modeled production does not authorize price imputation.
+Verify applicable market definitions and component structures by date, BAA, and product.
+
+Do not assume that every node and year shares the same energy component or exactly the same decomposition.
+
+Use the source’s published definitions to distinguish:
+- Total LMP.
+- Energy.
+- Congestion.
+- Marginal losses.
+- Applicable GHG or other components.
+- Unexplained reconciliation residual.
+For node-to-hub analysis:
+
+total_basis = node_LMP − hub_LMP
+
+On identical matched timestamps and using identical node-zone weights, decompose this into published component differences where valid:
+
+total_basis = energy_difference + congestion_difference + loss_difference + applicable_other_component_differences
+
+Do not call total basis “congestion” unless the other contributions have been shown to cancel or are explicitly excluded.
+
+If components are missing, preserve total basis but flag the decomposition as incomplete.
+
+Do not infer a particular binding constraint, outage, or physical cause from nodal prices alone. State what additional evidence would be needed.
+Use descriptive analysis appropriate to the requested historical population.
+
+Alongside means, provide concise diagnostics where useful:
+- Median and selected quantiles.
+- Minimum and maximum.
+- Negative-price frequency.
+- Solar-weighted negative exposure.
+- Monthly variation.
+- Concentration of results in a small number of hours.
+- Coverage and mapping composition.
+Preserve extreme published observations in primary metrics. Robust summaries are supplements, not permission to remove spikes or negative prices.
+
+Separate:
+1. Full-year results.
+2. Matched-calendar results.
+3. Coverage effects.
+4. Changes in node composition.
+5. Differences in zonal solar shapes.
+Where practical, add a clearly labeled balanced-node sensitivity containing nodes meeting the same mapping and coverage criteria in every comparison period. Do not replace the full historical universe with that subset.
+
+Do not attach generic confidence intervals to deterministic historical averages merely because statistical software can produce them.
+
+Distinguish uncertainty from:
+- Missing observations.
+- Zone mapping.
+- Solar-model assumptions.
+- Repair estimation.
+- Future market variability.
+If inferential intervals are specifically justified, account for time dependence and explain the estimand. Do not treat hourly prices as independent random observations by default.
+Use separate stage statuses:
+- Source-access status.
+- Download completeness.
+- Canonical-data validity.
+- Zone-mapping completeness.
+- Solar-profile validity.
+- Repair-validation status.
+- Calculation reconciliation.
+- Workbook readback.
+- Overall delivery status.
+A successful later stage must not conceal an earlier failure.
+
+Block the affected primary result when:
+- Zone assignment is unresolved.
+- Required profile hours remain unresolved.
+- Conflicting source records cannot be resolved.
+- A denominator is invalid.
+- Required reconciliation fails materially.
+Continue producing unaffected results, but identify blocked outputs explicitly.
+
+Do not repeatedly rebuild completed files for cosmetic changes. Support documentation-only updates and read-only validation.
+Keep the requirement for exactly three final annual workbooks.
+
+Integrate the framework through:
+- Solar repair indicators in Solar_Profile.
+- Mapping statuses in node-level tables.
+- Separate observed coverage and repair statistics.
+- Repair validation and sensitivity results in QA_Validation.
+- Confirmed issues and unresolved hypotheses in Data_Issues.
+- A detailed machine-readable gap/repair log in supporting files.
+- Methods and caveats in README.
+- Lessons and prevention steps in DATA_CLEANING_AND_LESSONS.md.
+The final handoff must distinguish:
+- What was observed.
+- What was modeled.
+- What was repaired.
+- What was inferred.
+- What remains unresolved.
+- How those distinctions affect interpretation.
+Do not equate “all checks executed” with “all checks passed,” or “all workbooks created” with “all requested data complete.”
