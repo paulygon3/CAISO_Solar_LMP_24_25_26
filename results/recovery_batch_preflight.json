@@ -1,0 +1,17 @@
+{
+  "original_workflow_run": 44693609044,
+  "official_months_retained": 35,
+  "prior_completed_named_requests": 235,
+  "superseded_before_annual_workbooks": true,
+  "reason": "Source completeness validation and fewer HTTP requests per study",
+  "original_planned_requests": 964,
+  "new_planned_requests": 169,
+  "preflight": {
+    "requested_ids": 56,
+    "window_start": "2026-05-01",
+    "window_end_exclusive": "2026-05-29",
+    "source_bytes": 600607,
+    "known_price_observations": 13344,
+    "known_prices_reproduced": 13344
+  }
+}
