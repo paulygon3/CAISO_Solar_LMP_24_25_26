@@ -53,8 +53,13 @@ def package(dest,paths):
     return {"name":dest.name,"bytes":dest.stat().st_size,"sha256":sha(dest),"members":len(files)}
 
 def release_inventory(tag):
-    records=json.loads(gh("release","view",tag,"--json","assets"))
-    return {a["name"]:a for a in records["assets"]}
+    release_id=gh("api",f"repos/{{owner}}/{{repo}}/releases/tags/{tag}","--jq",".id").strip()
+    pages=gh("api","--paginate",f"repos/{{owner}}/{{repo}}/releases/{release_id}/assets?per_page=100","--jq",'.[] | [.name,.size,.id] | @tsv')
+    result={}
+    for row in pages.splitlines():
+        name,size,asset_id=row.split("\t")
+        result[name]={"name":name,"size":int(size),"id":int(asset_id)}
+    return result
 
 def upload(tag,files):
     assets=release_inventory(tag)

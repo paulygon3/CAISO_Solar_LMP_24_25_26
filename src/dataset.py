@@ -6,10 +6,12 @@ import os
 import shutil
 import tempfile
 import zipfile
+import subprocess
+from functools import lru_cache
 import numpy as np
 import pandas as pd
 from common import *
-from acquire import periods,gh
+from acquire import periods,gh,release_inventory
 from recovery import load_day,day_recovered
 from reference import ZONES,BASE_FIELDS,segments,contour
 
@@ -19,8 +21,19 @@ REPO="paulygon3/CAISO_Solar_LMP_24_25_26"
 
 def get_asset(tag,name,folder):
     folder.mkdir(parents=True,exist_ok=True)
-    gh("release","download",tag,"--repo",REPO,"-p",name,"-D",folder,"--clobber")
-    return folder/name
+    path=folder/name
+    try:
+        gh("release","download",tag,"--repo",REPO,"-p",name,"-D",folder,"--clobber")
+    except subprocess.CalledProcessError:
+        assets=asset_index(tag)
+        if name not in assets:raise
+        with path.open("wb") as f:
+            subprocess.run(["gh","api",f"repos/{REPO}/releases/assets/{assets[name]['id']}","-H","Accept: application/octet-stream"],stdout=f,check=True)
+    return path
+
+@lru_cache(maxsize=2)
+def asset_index(tag):
+    return release_inventory(tag)
 
 def restore_month(month):
     with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
